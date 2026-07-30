@@ -101,16 +101,21 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
             </div>
           )}
 
-          {/* Top Scores Leaderboard Preview */}
+          {/* Top Scores Leaderboard Preview Card */}
           {stats.topScores && stats.topScores.length > 0 && (
-            <div className="leaderboard-preview">
-              <h5>📊 명예의 전당 (Top 5)</h5>
-              <div className="leaderboard-list">
+            <div className="leaderboard-preview-card">
+              <h4 className="leaderboard-preview-title">
+                <Trophy size={15} className="text-yellow-400" />
+                <span>명예의 전당 (Top 5)</span>
+              </h4>
+              <div className="leaderboard-preview-list">
                 {stats.topScores.slice(0, 5).map((entry, idx) => (
-                  <div key={idx} className="leaderboard-item">
-                    <span className="rank">#{idx + 1}</span>
-                    <span className="name">{entry.nickname}</span>
-                    <span className="score">{entry.score.toLocaleString()}</span>
+                  <div key={idx} className={`leaderboard-preview-item rank-${idx + 1}`}>
+                    <span className="item-rank-badge">
+                      {idx === 0 ? '🥇 1위' : idx === 1 ? '🥈 2위' : idx === 2 ? '🥉 3위' : `#${idx + 1}`}
+                    </span>
+                    <span className="item-name">{entry.nickname || '익명'}</span>
+                    <span className="item-score">{entry.score.toLocaleString()}</span>
                   </div>
                 ))}
               </div>
