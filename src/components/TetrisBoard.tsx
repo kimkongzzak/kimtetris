@@ -20,6 +20,8 @@ const EXCEL_COLORS: Record<string, string> = {
   Z: '#dc2626',
 };
 
+const EXCEL_COLS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+
 export const TetrisBoard: React.FC<TetrisBoardProps> = ({
   board,
   currentPiece,
@@ -28,6 +30,13 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
   theme = 'excel',
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const isExcel = theme === 'excel';
+
+  // Canvas Dimensions
+  const headerOffsetX = isExcel ? 24 : 0;
+  const headerOffsetY = isExcel ? 24 : 0;
+  const canvasWidth = 300 + headerOffsetX;
+  const canvasHeight = 600 + headerOffsetY;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -35,39 +44,73 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const isExcel = theme === 'excel';
-
-    // Get canvas dimensions
-    const width = canvas.width;
-    const height = canvas.height;
-    const cellWidth = width / BOARD_WIDTH;
-    const cellHeight = height / BOARD_HEIGHT;
+    const cellWidth = 300 / BOARD_WIDTH; // 30px per cell
+    const cellHeight = 600 / BOARD_HEIGHT; // 30px per cell
 
     // Clear canvas
-    ctx.clearRect(0, 0, width, height);
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-    // 1. Draw Grid Background & Grid Lines (Always 100% solid & visible)
+    // 1. Draw Excel Headers & Grid Background
     ctx.globalAlpha = 1.0;
 
     if (isExcel) {
+      // White background for board canvas area
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, width, height);
+      ctx.fillRect(headerOffsetX, headerOffsetY, 300, 600);
+
+      // Top-Left Corner Spacer Cell
+      ctx.fillStyle = '#f1f5f9';
+      ctx.fillRect(0, 0, headerOffsetX, headerOffsetY);
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(0, 0, headerOffsetX, headerOffsetY);
+
+      // Top Column Headers ('A' ~ 'J')
+      ctx.font = 'bold 11px Segoe UI, Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      for (let c = 0; c < BOARD_WIDTH; c++) {
+        const cx = headerOffsetX + c * cellWidth;
+        ctx.fillStyle = '#f1f5f9';
+        ctx.fillRect(cx, 0, cellWidth, headerOffsetY);
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.strokeRect(cx, 0, cellWidth, headerOffsetY);
+
+        ctx.fillStyle = '#475569';
+        ctx.fillText(EXCEL_COLS[c], cx + cellWidth / 2, headerOffsetY / 2 + 1);
+      }
+
+      // Left Row Headers ('1' ~ '20')
+      ctx.font = 'bold 10px Segoe UI, Arial, sans-serif';
+
+      for (let r = 0; r < BOARD_HEIGHT; r++) {
+        const ry = headerOffsetY + r * cellHeight;
+        ctx.fillStyle = '#f1f5f9';
+        ctx.fillRect(0, ry, headerOffsetX, cellHeight);
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.strokeRect(0, ry, headerOffsetX, cellHeight);
+
+        ctx.fillStyle = '#475569';
+        ctx.fillText(String(r + 1), headerOffsetX / 2, ry + cellHeight / 2 + 1);
+      }
     }
 
+    // Grid lines for board
     ctx.strokeStyle = isExcel ? '#d4d4d4' : 'rgba(255, 255, 255, 0.08)';
     ctx.lineWidth = 1;
 
     for (let x = 0; x <= BOARD_WIDTH; x++) {
       ctx.beginPath();
-      ctx.moveTo(x * cellWidth, 0);
-      ctx.lineTo(x * cellWidth, height);
+      ctx.moveTo(headerOffsetX + x * cellWidth, headerOffsetY);
+      ctx.lineTo(headerOffsetX + x * cellWidth, headerOffsetY + 600);
       ctx.stroke();
     }
 
     for (let y = 0; y <= BOARD_HEIGHT; y++) {
       ctx.beginPath();
-      ctx.moveTo(0, y * cellHeight);
-      ctx.lineTo(width, y * cellHeight);
+      ctx.moveTo(headerOffsetX, headerOffsetY + y * cellHeight);
+      ctx.lineTo(headerOffsetX + 300, headerOffsetY + y * cellHeight);
       ctx.stroke();
     }
 
@@ -80,15 +123,13 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
       isGhost: boolean = false,
       pieceType?: string
     ) => {
-      const px = x * cellWidth;
-      const py = y * cellHeight;
+      const px = headerOffsetX + x * cellWidth;
+      const py = headerOffsetY + y * cellHeight;
       const gap = isExcel ? 0.5 : 1.5;
       const sizeX = cellWidth - gap * 2;
       const sizeY = cellHeight - gap * 2;
 
       ctx.save();
-
-      // Apply block opacity slider only to the block elements!
       ctx.globalAlpha = Math.max(0.0, blockOpacity);
 
       if (isExcel) {
@@ -146,7 +187,7 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
       }
     }
 
-    // 3. Draw Ghost Piece with blockOpacity
+    // 3. Draw Ghost Piece
     if (ghostPiece && currentPiece) {
       for (let y = 0; y < ghostPiece.shape.length; y++) {
         for (let x = 0; x < ghostPiece.shape[y].length; x++) {
@@ -161,7 +202,7 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
       }
     }
 
-    // 4. Draw Current Active Piece with blockOpacity
+    // 4. Draw Current Active Piece
     if (currentPiece) {
       for (let y = 0; y < currentPiece.shape.length; y++) {
         for (let x = 0; x < currentPiece.shape[y].length; x++) {
@@ -175,15 +216,16 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
         }
       }
     }
-  }, [board, currentPiece, ghostPiece, blockOpacity, theme]);
+  }, [board, currentPiece, ghostPiece, blockOpacity, theme, canvasWidth, canvasHeight, headerOffsetX, headerOffsetY, isExcel]);
 
   return (
-    <div className={`canvas-container ${theme === 'excel' ? 'excel-canvas-mode' : 'shadow-neon'}`}>
+    <div className={`canvas-container ${isExcel ? 'excel-canvas-mode' : 'shadow-neon'}`}>
       <canvas
         ref={canvasRef}
-        width={300}
-        height={600}
+        width={canvasWidth}
+        height={canvasHeight}
         className="tetris-canvas"
+        style={{ aspectRatio: `${canvasWidth} / ${canvasHeight}` }}
       />
     </div>
   );

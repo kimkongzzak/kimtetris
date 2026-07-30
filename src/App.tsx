@@ -426,38 +426,13 @@ export function App() {
 
         {/* Center: Main Canvas Grid */}
         <div className="center-board">
-          {theme === 'excel' ? (
-            <div className="excel-board-wrapper">
-              <div className="excel-col-headers">
-                <div style={{ width: '20px', flexShrink: 0 }}></div>
-                {['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].map((col) => (
-                  <div key={col} className="excel-col-cell">{col}</div>
-                ))}
-              </div>
-              <div className="excel-board-body">
-                <div className="excel-row-headers">
-                  {Array.from({ length: 20 }, (_, i) => (
-                    <div key={i} className="excel-row-cell">{i + 1}</div>
-                  ))}
-                </div>
-                <TetrisBoard
-                  board={board}
-                  currentPiece={currentPiece}
-                  ghostPiece={ghostPiece}
-                  blockOpacity={cardOpacity / 100}
-                  theme={theme}
-                />
-              </div>
-            </div>
-          ) : (
-            <TetrisBoard
-              board={board}
-              currentPiece={currentPiece}
-              ghostPiece={ghostPiece}
-              blockOpacity={cardOpacity / 100}
-              theme={theme}
-            />
-          )}
+          <TetrisBoard
+            board={board}
+            currentPiece={currentPiece}
+            ghostPiece={ghostPiece}
+            blockOpacity={cardOpacity / 100}
+            theme={theme}
+          />
         </div>
 
         {/* Right Side Column: Next Piece Queue & Scoreboard */}
