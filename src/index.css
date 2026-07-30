@@ -43,7 +43,7 @@ html, body, #root {
   width: 100%;
   height: 100vh;
   height: 100dvh;
-  overflow: hidden; /* Single screen - no scrollbars */
+  overflow: hidden; /* Prevent body scrollbar completely */
 }
 
 body {
@@ -57,14 +57,14 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* App Container - Single Screen Integrated Shell */
+/* App Container */
 .app-container {
   width: 100%;
   max-width: 980px;
   height: 100vh;
   height: 100dvh;
   margin: 0 auto;
-  padding: 0.75rem;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -72,20 +72,20 @@ body {
   overflow: hidden;
 }
 
-/* Single Integrated Header (Non-sticky, embedded seamlessly) */
+/* Header Bar - Responsive & Compact */
 .header-bar {
   position: relative;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.75rem;
   background: rgba(var(--bg-card-rgb), var(--card-opacity));
   border: 1px solid var(--border-neon);
-  border-radius: 14px;
+  border-radius: 12px;
   backdrop-filter: blur(12px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  gap: 0.5rem;
+  gap: 0.4rem;
   opacity: var(--card-opacity);
   transition: background-color 0.15s ease, opacity 0.15s ease;
   flex-shrink: 0;
@@ -94,35 +94,36 @@ body {
 .logo-group {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .game-title {
   font-family: var(--font-orbitron);
   font-weight: 900;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   letter-spacing: 1.5px;
   background: linear-gradient(135deg, var(--primary-cyan), var(--accent-purple));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 10px var(--primary-glow);
+  white-space: nowrap;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 /* Top Opacity Slider Controller */
 .opacity-control-group {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
   background: rgba(var(--bg-card-rgb), 0.4);
   border: 1px solid var(--border-neon);
-  padding: 0.3rem 0.6rem;
-  border-radius: 10px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
   font-size: 0.75rem;
   color: var(--text-muted);
 }
@@ -140,9 +141,9 @@ body {
 .opacity-slider {
   -webkit-appearance: none;
   appearance: none;
-  width: 75px;
-  height: 5px;
-  border-radius: 3px;
+  width: 60px;
+  height: 4px;
+  border-radius: 2px;
   background: linear-gradient(90deg, rgba(0, 240, 240, 0.2), var(--primary-cyan));
   outline: none;
   cursor: pointer;
@@ -163,7 +164,7 @@ body {
   font-family: var(--font-orbitron);
   font-size: 0.7rem;
   color: var(--text-main);
-  min-width: 32px;
+  min-width: 28px;
   text-align: right;
   font-weight: 700;
 }
@@ -172,15 +173,15 @@ body {
   background: rgba(var(--bg-card-rgb), var(--card-opacity));
   border: 1px solid var(--border-neon);
   color: var(--text-main);
-  border-radius: 10px;
-  padding: 0.4rem 0.65rem;
+  border-radius: 8px;
+  padding: 0.35rem 0.55rem;
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   cursor: pointer;
   backdrop-filter: blur(8px);
   transition: all 0.15s ease;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
@@ -196,15 +197,16 @@ body {
   box-shadow: 0 0 10px var(--primary-glow);
 }
 
-/* Integrated Game Layout */
+/* Integrated Game Layout - Always 3 Columns Side-by-Side */
 .game-layout {
   display: flex;
-  gap: 1rem;
+  flex-direction: row;
+  gap: 0.75rem;
   align-items: center;
   justify-content: center;
   width: 100%;
   flex: 1;
-  min-height: 0; /* Prevents overflow */
+  min-height: 0;
   padding: 0.25rem 0;
 }
 
@@ -216,8 +218,8 @@ body {
 .side-column {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  width: 170px;
+  gap: 0.5rem;
+  width: 160px;
   height: 100%;
   justify-content: center;
 }
@@ -226,8 +228,8 @@ body {
 .glass-panel {
   background: rgba(var(--bg-card-rgb), var(--card-opacity));
   border: 1px solid var(--border-neon);
-  border-radius: 14px;
-  padding: 0.8rem;
+  border-radius: 12px;
+  padding: 0.75rem;
   backdrop-filter: blur(12px);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
   transition: background-color 0.15s ease, border-color 0.3s ease;
@@ -235,23 +237,25 @@ body {
 
 .panel-title {
   font-family: var(--font-orbitron);
-  font-size: 0.75rem;
-  letter-spacing: 1.2px;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
   color: var(--text-muted);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
   text-align: center;
 }
 
-/* Canvas Area Integrated Scaling */
+/* Canvas Area Scaling */
 .center-board {
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 1;
+  min-height: 0;
 }
 
 .canvas-container {
-  border-radius: 14px;
+  border-radius: 12px;
   border: 2px solid var(--primary-cyan);
   box-shadow: 0 0 20px var(--primary-glow);
   background: rgba(var(--bg-card-rgb), var(--card-opacity));
@@ -259,8 +263,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  max-height: calc(100vh - 110px);
-  max-height: calc(100dvh - 110px);
+  max-height: calc(100vh - 100px);
+  max-height: calc(100dvh - 100px);
   aspect-ratio: 1 / 2;
   transition: background-color 0.15s ease, border-color 0.3s ease;
 }
@@ -281,8 +285,8 @@ body {
 }
 
 .mini-cell {
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
   border-radius: 2px;
   background-color: transparent;
 }
@@ -294,53 +298,53 @@ body {
 .queue-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
   align-items: center;
 }
 
 /* Scoreboard */
 .stat-group {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
 .stat-group.highlight {
   border-bottom: 1px dashed var(--border-neon);
-  padding-bottom: 0.4rem;
+  padding-bottom: 0.3rem;
 }
 
 .stat-label {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
-  font-size: 0.7rem;
+  gap: 0.25rem;
+  font-size: 0.65rem;
   color: var(--text-muted);
   font-family: var(--font-orbitron);
 }
 
 .stat-value {
   font-family: var(--font-orbitron);
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 800;
-  margin-top: 0.15rem;
+  margin-top: 0.1rem;
 }
 
 .stat-row {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.3rem;
   justify-content: space-between;
 }
 
 .stat-group.compact .stat-value {
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .combo-badge {
   background: linear-gradient(135deg, #ef4444, #f97316);
   color: white;
   font-weight: 700;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-align: center;
-  padding: 0.25rem;
+  padding: 0.2rem;
   border-radius: 6px;
   animation: pulse 1s infinite alternate;
 }
@@ -357,37 +361,37 @@ body {
   font-family: var(--font-orbitron);
   font-weight: 800;
   border: none;
-  border-radius: 10px;
-  padding: 0.65rem 1.2rem;
+  border-radius: 8px;
+  padding: 0.55rem 1rem;
   cursor: pointer;
-  box-shadow: 0 0 12px var(--primary-glow);
+  box-shadow: 0 0 10px var(--primary-glow);
   transition: all 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
   width: 100%;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 
 .neon-button:hover {
   transform: translateY(-1px) scale(1.02);
-  box-shadow: 0 0 20px var(--primary-cyan);
+  box-shadow: 0 0 18px var(--primary-cyan);
 }
 
 /* Touch Controls - Integrated Bottom Bar */
 .touch-controls-container {
   display: none; /* Desktop default */
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.35rem;
   width: 100%;
-  max-width: 360px;
+  max-width: 380px;
   flex-shrink: 0;
 }
 
 .touch-actions-row, .touch-dpad-row {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.35rem;
   justify-content: center;
 }
 
@@ -395,7 +399,7 @@ body {
   background: rgba(var(--bg-card-rgb), var(--card-opacity));
   border: 1px solid var(--border-neon);
   color: var(--text-main);
-  border-radius: 12px;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -413,10 +417,10 @@ body {
 
 .action-btn {
   flex: 1;
-  padding: 0.5rem 0.3rem;
-  font-size: 0.7rem;
+  padding: 0.45rem 0.2rem;
+  font-size: 0.65rem;
   font-weight: 700;
-  gap: 0.2rem;
+  gap: 0.15rem;
 }
 
 .hard-drop-btn {
@@ -426,7 +430,7 @@ body {
 
 .dpad-btn {
   flex: 1;
-  padding: 0.75rem 0;
+  padding: 0.6rem 0;
 }
 
 /* Fake Document Camouflage Overlay (몰컴 모드) */
@@ -456,7 +460,7 @@ body {
 }
 
 .stealth-doc-title {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: bold;
   color: #0f172a;
 }
@@ -621,58 +625,89 @@ body {
   color: var(--accent-yellow);
 }
 
-/* Responsive Single-Screen Breakpoints for Mobile */
+/* Mobile Breakpoints - Perfectly Proportioned 3-Column Layout */
 @media (max-width: 768px) {
   .app-container {
-    padding: 0.4rem;
+    padding: 0.3rem;
   }
 
   .header-bar {
-    padding: 0.4rem 0.6rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .game-title {
+    font-size: 0.95rem;
+  }
+
+  .icon-btn span, .opacity-control-group label span {
+    display: none; /* Icon-only in header for mobile to avoid overflow */
   }
 
   .opacity-slider {
-    width: 50px;
+    width: 45px;
   }
 
   .game-layout {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
-  .side-column {
-    width: 100%;
-    max-width: 320px;
-    height: auto;
     flex-direction: row;
+    gap: 0.35rem;
+    align-items: center;
     justify-content: space-between;
   }
 
+  .side-column {
+    width: 82px; /* Fixed compact width for left & right panels */
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.35rem;
+  }
+
   .side-column .glass-panel {
-    flex: 1;
-    padding: 0.5rem;
+    padding: 0.35rem 0.25rem;
+    border-radius: 8px;
   }
 
-  .side-column-left {
-    order: 2;
+  .panel-title {
+    font-size: 0.58rem;
+    margin-bottom: 0.2rem;
   }
 
-  .side-column-right {
-    order: 3;
+  .mini-cell {
+    width: 10px;
+    height: 10px;
+  }
+
+  .stat-group {
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.55rem;
+    gap: 0.15rem;
+  }
+
+  .stat-value {
+    font-size: 0.85rem;
+  }
+
+  .neon-button {
+    padding: 0.35rem 0.2rem;
+    font-size: 0.65rem;
+    border-radius: 6px;
   }
 
   .center-board {
-    order: 1;
-    max-height: 48vh;
+    max-height: calc(100vh - 170px);
+    max-height: calc(100dvh - 170px);
   }
 
   .canvas-container {
-    max-height: 48vh;
+    max-height: calc(100vh - 170px);
+    max-height: calc(100dvh - 170px);
+    border-radius: 8px;
   }
 
   .touch-controls-container {
     display: flex;
-    order: 4;
   }
 }
