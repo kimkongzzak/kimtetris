@@ -917,16 +917,16 @@ body {
 .touch-stealth-row.row-mid {
   justify-content: center;
   align-items: flex-start;
-  gap: 1.8rem;
-  margin: 0.4rem 0 0.4rem; /* Increased top & bottom margin */
+  gap: 1.4rem;
+  margin: 0.25rem 0 0.35rem;
 }
 
 .center-offset-down {
-  transform: translateY(14px); /* Subtle height offset / stepped down */
+  transform: translateY(8px); /* Smooth, subtle stepped-down offset */
 }
 
 .center-offset-down:active {
-  transform: translateY(14px) scale(0.92) !important;
+  transform: translateY(8px) scale(0.92) !important;
 }
 
 .touch-stealth-row.row-bot {
@@ -1083,20 +1083,97 @@ body {
   transform: scale(0.94);
 }
 
-[data-theme='excel'] .hold-big-btn {
-  background: #ffffff !important;
-  border-color: #107c41 !important;
-  color: #107c41 !important;
+/* Excel Spreadsheet Cell Theme Overrides for Touch Controls */
+[data-theme='excel'] .touch-controls-container {
+  background: rgba(248, 250, 252, 0.95) !important;
+  border-top: 1.5px solid #e2e8f0 !important;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03) !important;
 }
 
 [data-theme='excel'] .dpad-arrow-btn {
   background: #ffffff !important;
-  border-color: #0f172a !important;
-  color: #0f172a !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #1e293b !important;
+  border-radius: 4px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
-[data-theme='excel'] .drop-big-btn {
-  background: linear-gradient(135deg, #d97706, #b45309) !important;
+[data-theme='excel'] .dpad-arrow-btn:active {
+  background: #f1f5f9 !important;
+  border-color: #0f172a !important;
+}
+
+[data-theme='excel'] .softdrop-blue-btn {
+  background: #e6f4ea !important;
+  border: 2px solid #107c41 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 1px 3px rgba(16, 124, 65, 0.15) !important;
+}
+
+[data-theme='excel'] .softdrop-blue-btn svg {
+  color: #107c41 !important;
+}
+
+[data-theme='excel'] .softdrop-blue-btn:active {
+  background: #c8e6c9 !important;
+}
+
+[data-theme='excel'] .hold-stepped-btn {
+  background: #e6f4ea !important;
+  border: 1.5px solid #107c41 !important;
+  color: #107c41 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 1px 3px rgba(16, 124, 65, 0.15) !important;
+  font-weight: 800 !important;
+}
+
+[data-theme='excel'] .hold-stepped-btn:active {
+  background: #c8e6c9 !important;
+  color: #0b5c30 !important;
+}
+
+[data-theme='excel'] .rotate-blue-btn {
+  background: #e0f2fe !important;
+  border: 1.5px solid #0284c7 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 1px 3px rgba(2, 132, 199, 0.15) !important;
+}
+
+[data-theme='excel'] .rotate-blue-btn svg {
+  color: #0369a1 !important;
+}
+
+[data-theme='excel'] .rotate-blue-btn:active {
+  background: #bae6fd !important;
+}
+
+[data-theme='excel'] .drop-stepped-btn {
+  background: #fef3c7 !important;
+  border: 1.5px solid #d97706 !important;
+  color: #b45309 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 1px 3px rgba(217, 119, 6, 0.15) !important;
+  font-weight: 800 !important;
+}
+
+[data-theme='excel'] .drop-stepped-btn svg {
+  color: #b45309 !important;
+}
+
+[data-theme='excel'] .drop-stepped-btn:active {
+  background: #fde68a !important;
+  color: #92400e !important;
+}
+
+[data-theme='excel'] .mobile-float-btn {
+  background: #107c41 !important;
+  border: 1.5px solid #0b5c30 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 2px 8px rgba(16, 124, 65, 0.35) !important;
+}
+
+[data-theme='excel'] .mobile-float-btn:active {
+  background: #0b5c30 !important;
 }
 
 .touch-btn {
