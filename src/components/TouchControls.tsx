@@ -45,65 +45,67 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
 
   return (
     <div className="touch-controls-container">
-      {/* Left Cluster: Top HOLD, Bottom HARD DROP */}
-      <div className="touch-group-left">
+      {/* 1단 (상단): HOLD (좌) & DROP (우) */}
+      <div className="touch-row-top">
         <button
           className="touch-btn action-btn hold-btn"
           onPointerDown={(e) => handlePointerDown(e, onHold)}
           disabled={disabled}
         >
-          <Shield size={14} />
+          <Shield size={16} />
           <span>HOLD</span>
         </button>
 
         <button
-          className="touch-btn action-btn hard-drop-btn vibrant-hard-drop"
+          className="touch-btn action-btn drop-btn vibrant-hard-drop"
           onPointerDown={(e) => handlePointerDown(e, onHardDrop)}
           disabled={disabled}
         >
-          <Zap size={15} color="#ffffff" />
-          <span>HARD DROP</span>
+          <Zap size={16} color="#ffffff" />
+          <span>DROP</span>
         </button>
       </div>
 
-      {/* Right Cluster: Keypad format */}
-      <div className="touch-group-right">
-        {/* Top Row: Vibrant Rotate Button 🔁 */}
-        <div className="touch-row-top">
-          <button
-            className="touch-btn rotate-top-btn vibrant-rotate"
-            onPointerDown={(e) => handlePointerDown(e, onRotate)}
-            disabled={disabled}
-          >
-            <RotateCw size={16} color="#ffffff" />
-            <span>회전 🔁</span>
-          </button>
-        </div>
+      {/* 2단 (중앙): 시계방향 회전 (↻) */}
+      <div className="touch-row-mid">
+        <button
+          className="touch-btn rotate-circle-btn vibrant-rotate"
+          onPointerDown={(e) => handlePointerDown(e, onRotate)}
+          disabled={disabled}
+          title="회전"
+        >
+          <RotateCw size={26} color="#ffffff" />
+        </button>
+      </div>
 
-        {/* Bottom Row: ◀️ Down ▶️ */}
-        <div className="touch-row-bottom">
-          <button
-            className="touch-btn dpad-btn"
-            onPointerDown={(e) => handlePointerDown(e, onMoveLeft)}
-            disabled={disabled}
-          >
-            <ArrowLeft size={18} />
-          </button>
-          <button
-            className="touch-btn dpad-btn"
-            onPointerDown={(e) => handlePointerDown(e, onSoftDrop)}
-            disabled={disabled}
-          >
-            <ArrowDown size={18} />
-          </button>
-          <button
-            className="touch-btn dpad-btn"
-            onPointerDown={(e) => handlePointerDown(e, onMoveRight)}
-            disabled={disabled}
-          >
-            <ArrowRight size={18} />
-          </button>
-        </div>
+      {/* 3단 (하단): ◀ (좌), ▼ (아래/소프트드롭), ▶ (우) */}
+      <div className="touch-row-bot">
+        <button
+          className="touch-btn dpad-btn"
+          onPointerDown={(e) => handlePointerDown(e, onMoveLeft)}
+          disabled={disabled}
+          title="왼쪽 이동"
+        >
+          <ArrowLeft size={22} />
+        </button>
+
+        <button
+          className="touch-btn dpad-btn"
+          onPointerDown={(e) => handlePointerDown(e, onSoftDrop)}
+          disabled={disabled}
+          title="아래로 소프트드롭"
+        >
+          <ArrowDown size={22} />
+        </button>
+
+        <button
+          className="touch-btn dpad-btn"
+          onPointerDown={(e) => handlePointerDown(e, onMoveRight)}
+          disabled={disabled}
+          title="오른쪽 이동"
+        >
+          <ArrowRight size={22} />
+        </button>
       </div>
     </div>
   );

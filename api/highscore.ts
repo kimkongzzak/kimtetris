@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { createClient } from '@supabase/supabase-js';
 
 interface LeaderboardEntry {
   nickname: string;
@@ -6,7 +7,7 @@ interface LeaderboardEntry {
   date: string;
 }
 
-// Global server in-memory storage (persists during warm lambdas)
+// In-memory fallback
 let globalRecord = {
   highScore: 10000,
   nickname: 'CYBER_LEGEND',
@@ -15,7 +16,15 @@ let globalRecord = {
   ] as LeaderboardEntry[],
 };
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
+// Supabase client instance (if env variables exist)
+const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '';
+const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY || process.env.VITE_SUPABASE_ANON_KEY || '';
+
+const supabase = (supabaseUrl && supabaseKey)
+  ? createClient(supabaseUrl, supabaseKey)
+  : null;
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -30,6 +39,32 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === 'GET') {
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('tetris_scores')
+          .select('nickname, score, created_at')
+          .order('score', { ascending: false })
+          .limit(10);
+
+        if (!error && data && data.length > 0) {
+          const topScores: LeaderboardEntry[] = data.map((item) => ({
+            nickname: item.nickname,
+            score: item.score,
+            date: item.created_at ? new Date(item.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          }));
+
+          return res.status(200).json({
+            highScore: topScores[0].score,
+            nickname: topScores[0].nickname,
+            topScores,
+          });
+        }
+      } catch (err) {
+        console.error('Supabase fetch error:', err);
+      }
+    }
+
     return res.status(200).json(globalRecord);
   }
 
@@ -42,19 +77,65 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
 
     const cleanName = String(nickname).trim().slice(0, 12) || '익명';
     const numScore = Math.floor(score);
+    const createdAt = new Date().toISOString();
+    const dateString = createdAt.split('T')[0];
 
+    // Try saving to Supabase if configured
+    if (supabase) {
+      try {
+        const { error: insertError } = await supabase
+          .from('tetris_scores')
+          .insert([
+            {
+              nickname: cleanName,
+              score: numScore,
+              created_at: createdAt,
+            },
+          ]);
+
+        if (insertError) {
+          console.error('Supabase insert error:', insertError.message);
+        } else {
+          // Fetch updated top 10 from Supabase
+          const { data } = await supabase
+            .from('tetris_scores')
+            .select('nickname, score, created_at')
+            .order('score', { ascending: false })
+            .limit(10);
+
+          if (data && data.length > 0) {
+            const topScores: LeaderboardEntry[] = data.map((item) => ({
+              nickname: item.nickname,
+              score: item.score,
+              date: item.created_at ? new Date(item.created_at).toISOString().split('T')[0] : dateString,
+            }));
+
+            return res.status(200).json({
+              success: true,
+              globalRecord: {
+                highScore: topScores[0].score,
+                nickname: topScores[0].nickname,
+                topScores,
+              },
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Supabase save error:', err);
+      }
+    }
+
+    // In-memory fallback if Supabase is not configured or fails
     const newEntry: LeaderboardEntry = {
       nickname: cleanName,
       score: numScore,
-      date: new Date().toISOString().split('T')[0],
+      date: dateString,
     };
 
-    // Update top scores
     globalRecord.topScores.push(newEntry);
     globalRecord.topScores.sort((a, b) => b.score - a.score);
-    globalRecord.topScores = globalRecord.topScores.slice(0, 10); // Keep top 10
+    globalRecord.topScores = globalRecord.topScores.slice(0, 10);
 
-    // Update global high score if higher
     if (numScore > globalRecord.highScore) {
       globalRecord.highScore = numScore;
       globalRecord.nickname = cleanName;
@@ -66,6 +147,5 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  return res.status(45)
-    .json({ error: 'Method not allowed' });
+  return res.status(405).json({ error: 'Method not allowed' });
 }

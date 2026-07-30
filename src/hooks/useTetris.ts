@@ -21,6 +21,7 @@ import {
   getDropInterval,
 } from '../utils/tetris';
 import { soundManager } from '../utils/audio';
+import { getTopScoresFromDb, saveScoreToDb, isSupabaseConfigured } from '../lib/supabase';
 
 const HIGH_SCORE_KEY = 'CYBER_TETRIS_HIGH_SCORE';
 const HIGH_SCORE_NICK_KEY = 'CYBER_TETRIS_HIGH_SCORE_NICK';
@@ -64,6 +65,24 @@ export const useTetris = () => {
   // Fetch Server High Score & Leaderboard on Initial Load
   useEffect(() => {
     const fetchServerHighScore = async () => {
+      if (isSupabaseConfigured) {
+        const dbScores = await getTopScoresFromDb(10);
+        if (dbScores.length > 0) {
+          const topScores = dbScores.map((item) => ({
+            nickname: item.nickname,
+            score: item.score,
+            date: item.created_at ? new Date(item.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          }));
+          setStats((prev) => ({
+            ...prev,
+            highScore: Math.max(prev.highScore, topScores[0].score),
+            highScoreNickname: topScores[0].nickname || prev.highScoreNickname,
+            topScores,
+          }));
+          return;
+        }
+      }
+
       try {
         const res = await fetch('/api/highscore');
         if (res.ok) {
@@ -117,7 +136,7 @@ export const useTetris = () => {
     };
   }, []);
 
-  // Submit new high score & nickname to Server
+  // Submit new high score & nickname to Server / Supabase DB
   const submitHighScore = useCallback(async (nickname: string, scoreToSubmit: number) => {
     const cleanNick = nickname.trim().slice(0, 12) || '익명';
     localStorage.setItem(HIGH_SCORE_KEY, scoreToSubmit.toString());
@@ -125,9 +144,27 @@ export const useTetris = () => {
 
     setStats((prev) => ({
       ...prev,
-      highScore: scoreToSubmit,
+      highScore: Math.max(prev.highScore, scoreToSubmit),
       highScoreNickname: cleanNick,
     }));
+
+    if (isSupabaseConfigured) {
+      await saveScoreToDb(cleanNick, scoreToSubmit);
+      const updatedScores = await getTopScoresFromDb(10);
+      if (updatedScores.length > 0) {
+        const topScores = updatedScores.map((item) => ({
+          nickname: item.nickname,
+          score: item.score,
+          date: item.created_at ? new Date(item.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        }));
+        setStats((prev) => ({
+          ...prev,
+          highScore: topScores[0].score,
+          highScoreNickname: topScores[0].nickname,
+          topScores,
+        }));
+      }
+    }
 
     try {
       const res = await fetch('/api/highscore', {
