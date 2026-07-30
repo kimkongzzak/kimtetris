@@ -217,24 +217,6 @@ export function App() {
         </div>
 
         <div className="header-actions">
-          {/* Top Fixed Transparency / Opacity Slider (Min 0%) - Controls Block Opacity ONLY */}
-          <div className="opacity-control-group" title="블록 투명도 조절 (0% ~ 100%)">
-            <label htmlFor="opacity-range">
-              <Sliders size={14} />
-              <span>투명도</span>
-            </label>
-            <input
-              id="opacity-range"
-              type="range"
-              min="0"
-              max="100"
-              value={cardOpacity}
-              onChange={(e) => setCardOpacity(Number(e.target.value))}
-              className="opacity-slider"
-            />
-            <span className="opacity-value">{cardOpacity}%</span>
-          </div>
-
           {/* Boss Key / Stealth Mode Toggle Button */}
           <button
             className={`icon-btn ${isStealthMode ? 'stealth-active' : ''}`}
@@ -276,6 +258,24 @@ export function App() {
         <span className="fx-text">
           =SUM(SCORE: {stats.score}, LEVEL: {stats.level}, LINES: {stats.lines}, HIGH: {stats.highScore})
         </span>
+      </div>
+
+      {/* Dedicated Full-Width Transparency Control Row (Always visible & wide for precision) */}
+      <div className="opacity-slider-row" title="블록 투명도 섬세 조절 (0% ~ 100%)">
+        <label htmlFor="opacity-range" className="opacity-slider-label">
+          <Sliders size={14} />
+          <span>블록 투명도</span>
+        </label>
+        <input
+          id="opacity-range"
+          type="range"
+          min="0"
+          max="100"
+          value={cardOpacity}
+          onChange={(e) => setCardOpacity(Number(e.target.value))}
+          className="opacity-slider-wide"
+        />
+        <span className="opacity-value">{cardOpacity}%</span>
       </div>
 
       {/* Main Game Section */}
