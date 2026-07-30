@@ -6,6 +6,7 @@ import { ScoreBoard } from './components/ScoreBoard';
 import { TouchControls } from './components/TouchControls';
 import { ControlsModal } from './components/ControlsModal';
 import { GameOverModal } from './components/GameOverModal';
+import { PauseModal } from './components/PauseModal';
 import {
   Play,
   Pause,
@@ -21,6 +22,7 @@ import {
   FileText,
   FileSpreadsheet,
   Plus,
+  Square,
 } from 'lucide-react';
 
 export function App() {
@@ -37,6 +39,7 @@ export function App() {
     toggleSound,
     startGame,
     togglePause,
+    endGame,
     moveLeft,
     moveRight,
     rotate,
@@ -295,24 +298,28 @@ export function App() {
                 <Play size={16} /> 시작하기
               </button>
             ) : gameState === 'PLAYING' || gameState === 'PAUSED' ? (
-              <div className="menu-btn-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              <div className="menu-btn-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                 <button className="neon-button" onClick={togglePause}>
                   {gameState === 'PAUSED' ? (
                     <>
-                      <Play size={16} /> 재개
+                      <Play size={14} /> 재개
                     </>
                   ) : (
                     <>
-                      <Pause size={16} /> 일시정지
+                      <Pause size={14} /> 일시정지
                     </>
                   )}
+                </button>
+                {/* Red End Game Button below Pause */}
+                <button className="end-game-btn" onClick={endGame} title="현재 게임 종료 및 점수 기록">
+                  <Square size={13} /> 게임종료
                 </button>
                 <button
                   className="icon-btn"
                   onClick={startGame}
-                  style={{ justifyContent: 'center' }}
+                  style={{ justifyContent: 'center', fontSize: '0.7rem', padding: '0.3rem' }}
                 >
-                  <RotateCcw size={14} /> 재시작
+                  <RotateCcw size={13} /> 재시작
                 </button>
               </div>
             ) : (
@@ -395,6 +402,14 @@ export function App() {
         onClose={() => setIsControlsModalOpen(false)}
       />
 
+      {/* Auto / Manual Pause Modal */}
+      <PauseModal
+        isOpen={gameState === 'PAUSED'}
+        onResume={togglePause}
+        onRestart={startGame}
+      />
+
+      {/* Game Over & High Score Submission Modal */}
       {gameState === 'GAMEOVER' && (
         <GameOverModal
           stats={stats}

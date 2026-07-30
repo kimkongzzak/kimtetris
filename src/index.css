@@ -419,6 +419,34 @@ body {
   box-shadow: 0 0 10px var(--primary-glow);
 }
 
+/* Distinct Red End Game Button */
+.end-game-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  color: #ffffff !important;
+  border: 1px solid #f87171 !important;
+  border-radius: 6px;
+  padding: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  transition: all 0.15s ease;
+}
+
+.end-game-btn:hover {
+  background: #dc2626 !important;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+
+[data-theme='excel'] .end-game-btn {
+  background: #d97706 !important;
+  border-color: #b45309 !important;
+  color: #ffffff !important;
+}
+
 /* Integrated Game Layout */
 .game-layout {
   display: flex;

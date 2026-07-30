@@ -6,7 +6,6 @@ import {
   BoardGrid,
   GameState,
   GameStats,
-  LeaderboardEntry,
 } from '../types/tetris';
 import {
   BOARD_WIDTH,
@@ -80,6 +79,27 @@ export const useTetris = () => {
     };
 
     fetchServerHighScore();
+  }, []);
+
+  // Window Focus Out / Visibility Change -> Auto Pause
+  useEffect(() => {
+    const handleBlur = () => {
+      setGameState((prev) => (prev === 'PLAYING' ? 'PAUSED' : prev));
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setGameState((prev) => (prev === 'PLAYING' ? 'PAUSED' : prev));
+      }
+    };
+
+    window.addEventListener('blur', handleBlur);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('blur', handleBlur);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   // Submit new high score & nickname to Server
@@ -171,7 +191,7 @@ export const useTetris = () => {
         const newCombo = prev.combo + 1;
         const addedScore = calculateScore(clearedLinesCount, prev.level, newCombo);
         const newScore = prev.score + addedScore;
-        const newLevel = calculateLevel(newScore, newLines); // Dynamic level every 10,000 pts
+        const newLevel = calculateLevel(newScore, newLines);
 
         return {
           ...prev,
@@ -208,6 +228,12 @@ export const useTetris = () => {
     });
 
     setCanHold(true);
+  }, []);
+
+  // End Game (GIVE UP) button action -> triggers GameOver & High Score check
+  const endGame = useCallback(() => {
+    soundManager.playGameOver();
+    setGameState('GAMEOVER');
   }, []);
 
   // Movement handlers
@@ -369,6 +395,7 @@ export const useTetris = () => {
     toggleSound,
     startGame,
     togglePause,
+    endGame,
     moveLeft,
     moveRight,
     rotate,
