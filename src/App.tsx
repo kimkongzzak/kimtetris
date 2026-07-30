@@ -17,6 +17,8 @@ import {
   Sliders,
   Sun,
   Moon,
+  EyeOff,
+  FileText,
 } from 'lucide-react';
 
 export function App() {
@@ -44,6 +46,7 @@ export function App() {
   const [isControlsModalOpen, setIsControlsModalOpen] = useState(false);
   const [cardOpacity, setCardOpacity] = useState(85);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [isStealthMode, setIsStealthMode] = useState(false);
 
   // Update CSS custom variable for opacity in real-time
   useEffect(() => {
@@ -59,9 +62,28 @@ export function App() {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
-  // Keyboard Event Listeners
+  const toggleStealth = () => {
+    setIsStealthMode((prev) => {
+      const next = !prev;
+      if (next && gameState === 'PLAYING') {
+        togglePause(); // Auto-pause game on stealth mode
+      }
+      return next;
+    });
+  };
+
+  // Keyboard Event Listeners (including Boss Key 'B')
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Boss Key 'B' or 'b' toggles Stealth Mode instantly
+      if (e.key === 'b' || e.key === 'B') {
+        e.preventDefault();
+        toggleStealth();
+        return;
+      }
+
+      if (isStealthMode) return;
+
       // Prevent default page scroll on game controls
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
         e.preventDefault();
@@ -110,6 +132,7 @@ export function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [
     gameState,
+    isStealthMode,
     moveLeft,
     moveRight,
     rotate,
@@ -121,6 +144,64 @@ export function App() {
 
   return (
     <div className="app-container">
+      {/* Camouflage Fake Document Overlay (몰컴 모드) */}
+      {isStealthMode && (
+        <div className="stealth-overlay">
+          <div className="stealth-doc-header">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <FileText size={24} color="#0284c7" />
+              <span className="stealth-doc-title">2026_하반기_사업계획서_및_실적분석_보고서.docx</span>
+            </div>
+            <button className="stealth-restore-btn" onClick={toggleStealth}>
+              게임 복귀 (단축키: B)
+            </button>
+          </div>
+
+          <div className="stealth-doc-body">
+            <h2>1. 프로젝트 진행 경과 및 핵심 KPI 요약</h2>
+            <p style={{ margin: '0.75rem 0', lineHeight: '1.6', color: '#475569' }}>
+              본 보고서는 2026년 하반기 주요 사업부별 실적 지표 및 목표 달성률을 종합 분석한 자료입니다.
+              지속적인 서비스 모니터링과 프로세스 개선을 통해 전분기 대비 14.8%의 효율성 증대를 기록하였습니다.
+            </p>
+
+            <table className="stealth-table">
+              <thead>
+                <tr>
+                  <th>구분</th>
+                  <th>목표 지표</th>
+                  <th>달성 실적</th>
+                  <th>달성률</th>
+                  <th>비고</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>시스템 최적화</td>
+                  <td>98.5%</td>
+                  <td>99.2%</td>
+                  <td>100.7%</td>
+                  <td>정상 가동</td>
+                </tr>
+                <tr>
+                  <td>사용자 만족도</td>
+                  <td>90.0점</td>
+                  <td>94.5점</td>
+                  <td>105.0%</td>
+                  <td>우수</td>
+                </tr>
+                <tr>
+                  <td>보안 및 접근 제어</td>
+                  <td>100%</td>
+                  <td>100%</td>
+                  <td>100%</td>
+                  <td>이상 없음</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {/* Fixed Top Header Navigation */}
       <header className="header-bar">
         <div className="logo-group">
@@ -129,8 +210,8 @@ export function App() {
         </div>
 
         <div className="header-actions">
-          {/* Top Fixed Transparency / Opacity Slider */}
-          <div className="opacity-control-group" title="UI 투명도 조절">
+          {/* Top Fixed Transparency / Opacity Slider (Min 0%) */}
+          <div className="opacity-control-group" title="UI 투명도 조절 (0% ~ 100%)">
             <label htmlFor="opacity-range">
               <Sliders size={14} />
               <span>투명도</span>
@@ -138,7 +219,7 @@ export function App() {
             <input
               id="opacity-range"
               type="range"
-              min="15"
+              min="0"
               max="100"
               value={cardOpacity}
               onChange={(e) => setCardOpacity(Number(e.target.value))}
@@ -146,6 +227,16 @@ export function App() {
             />
             <span className="opacity-value">{cardOpacity}%</span>
           </div>
+
+          {/* Boss Key / Stealth Mode Toggle Button */}
+          <button
+            className={`icon-btn ${isStealthMode ? 'stealth-active' : ''}`}
+            onClick={toggleStealth}
+            title="몰컴 모드 (단축키: B) - 보고서 위장 화면"
+          >
+            <EyeOff size={18} />
+            <span>몰컴(B)</span>
+          </button>
 
           {/* Dark / Light Mode Toggle Button */}
           <button className="icon-btn" onClick={toggleTheme} title="테마 전환 (다크/라이트)">
@@ -220,6 +311,7 @@ export function App() {
             board={board}
             currentPiece={currentPiece}
             ghostPiece={ghostPiece}
+            opacity={cardOpacity / 100}
           />
         </div>
 

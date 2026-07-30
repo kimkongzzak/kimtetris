@@ -6,12 +6,14 @@ interface TetrisBoardProps {
   board: BoardGrid;
   currentPiece: Piece | null;
   ghostPiece: Piece | null;
+  opacity?: number; // 0.0 ~ 1.0
 }
 
 export const TetrisBoard: React.FC<TetrisBoardProps> = ({
   board,
   currentPiece,
   ghostPiece,
+  opacity = 0.85,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -30,8 +32,11 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
     // Clear canvas
     ctx.clearRect(0, 0, width, height);
 
+    // Set canvas global alpha based on opacity slider
+    ctx.globalAlpha = Math.max(0.01, opacity);
+
     // Draw background grid lines & glowing border
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
     ctx.lineWidth = 1;
 
     for (let x = 0; x <= BOARD_WIDTH; x++) {
@@ -134,7 +139,7 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
         }
       }
     }
-  }, [board, currentPiece, ghostPiece]);
+  }, [board, currentPiece, ghostPiece, opacity]);
 
   return (
     <div className="canvas-container shadow-neon">
