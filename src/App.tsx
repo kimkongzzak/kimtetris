@@ -14,6 +14,7 @@ import {
   VolumeX,
   HelpCircle,
   Gamepad2,
+  Sliders,
 } from 'lucide-react';
 
 export function App() {
@@ -39,6 +40,12 @@ export function App() {
   } = useTetris();
 
   const [isControlsModalOpen, setIsControlsModalOpen] = useState(false);
+  const [cardOpacity, setCardOpacity] = useState(85);
+
+  // Update CSS custom variable for opacity in real-time
+  useEffect(() => {
+    document.documentElement.style.setProperty('--card-opacity', (cardOpacity / 100).toString());
+  }, [cardOpacity]);
 
   // Keyboard Event Listeners
   useEffect(() => {
@@ -102,14 +109,32 @@ export function App() {
 
   return (
     <div className="app-container">
-      {/* Top Header Navigation */}
+      {/* Fixed Top Header Navigation */}
       <header className="header-bar">
         <div className="logo-group">
-          <Gamepad2 size={28} className="text-cyan-400" />
+          <Gamepad2 size={26} className="text-cyan-400" />
           <h1 className="game-title">CYBER TETRIS</h1>
         </div>
 
         <div className="header-actions">
+          {/* Top Fixed Transparency / Opacity Slider */}
+          <div className="opacity-control-group" title="UI 투명도 조절">
+            <label htmlFor="opacity-range">
+              <Sliders size={14} />
+              <span>투명도</span>
+            </label>
+            <input
+              id="opacity-range"
+              type="range"
+              min="15"
+              max="100"
+              value={cardOpacity}
+              onChange={(e) => setCardOpacity(Number(e.target.value))}
+              className="opacity-slider"
+            />
+            <span className="opacity-value">{cardOpacity}%</span>
+          </div>
+
           <button className="icon-btn" onClick={toggleSound} title="사운드 온/오프">
             {soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
           </button>
