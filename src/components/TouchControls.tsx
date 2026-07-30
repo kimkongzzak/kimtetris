@@ -44,23 +44,52 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
   };
 
   return (
-    <div className="touch-controls-container">
-      {/* 1. 좌측 상단: 대형 HOLD 버튼 */}
-      <div className="touch-col-left">
+    <div className="touch-controls-container stepped-layout">
+      {/* 1단 (상단 좌측): 대형 HOLD 버튼 */}
+      <div className="touch-stealth-row row-top">
         <button
-          className="touch-btn action-big-btn hold-big-btn"
+          className="touch-btn action-big-btn hold-stepped-btn"
           onPointerDown={(e) => handlePointerDown(e, onHold)}
           disabled={disabled}
         >
-          <Shield size={22} />
+          <Shield size={20} />
           <span>HOLD</span>
         </button>
       </div>
 
-      {/* 2. 중앙 십자형 D-Pad 컨트롤러 (상: 🔄, 좌: ◀, 우: ▶, 하: ▼) */}
-      <div className="touch-col-center">
-        {/* 십자 상단: 회전 (🔄) */}
-        <div className="dpad-row-top">
+      {/* 2단 (중앙 미묘한 단차 네비게이션): ◀, ▼ (중앙 하단 단차), ▶ */}
+      <div className="touch-stealth-row row-mid">
+        <button
+          className="touch-btn dpad-arrow-btn left-arrow-btn"
+          onPointerDown={(e) => handlePointerDown(e, onMoveLeft)}
+          disabled={disabled}
+          title="좌측 이동"
+        >
+          <ArrowLeft size={30} />
+        </button>
+
+        <button
+          className="touch-btn dpad-square-btn softdrop-blue-btn center-offset-down"
+          onPointerDown={(e) => handlePointerDown(e, onSoftDrop)}
+          disabled={disabled}
+          title="아래로 이동 (소프트드롭)"
+        >
+          <ArrowDown size={26} color="#ffffff" />
+        </button>
+
+        <button
+          className="touch-btn dpad-arrow-btn right-arrow-btn"
+          onPointerDown={(e) => handlePointerDown(e, onMoveRight)}
+          disabled={disabled}
+          title="우측 이동"
+        >
+          <ArrowRight size={30} />
+        </button>
+      </div>
+
+      {/* 3단 (하단 우측 세트): 🔄 (회전) + DROP (하드드롭) */}
+      <div className="touch-stealth-row row-bot">
+        <div className="drop-rotate-group">
           <button
             className="touch-btn dpad-square-btn rotate-blue-btn"
             onPointerDown={(e) => handlePointerDown(e, onRotate)}
@@ -69,52 +98,16 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
           >
             <RotateCw size={26} color="#ffffff" />
           </button>
-        </div>
-
-        {/* 십자 중앙: ◀ 좌측 이동 & ▶ 우측 이동 */}
-        <div className="dpad-row-mid">
-          <button
-            className="touch-btn dpad-arrow-btn left-arrow-btn"
-            onPointerDown={(e) => handlePointerDown(e, onMoveLeft)}
-            disabled={disabled}
-            title="좌측 이동"
-          >
-            <ArrowLeft size={30} />
-          </button>
 
           <button
-            className="touch-btn dpad-arrow-btn right-arrow-btn"
-            onPointerDown={(e) => handlePointerDown(e, onMoveRight)}
+            className="touch-btn action-big-btn drop-stepped-btn"
+            onPointerDown={(e) => handlePointerDown(e, onHardDrop)}
             disabled={disabled}
-            title="우측 이동"
           >
-            <ArrowRight size={30} />
+            <Zap size={20} color="#ffffff" />
+            <span>DROP</span>
           </button>
         </div>
-
-        {/* 십자 하단: 소프트드롭 (▼) */}
-        <div className="dpad-row-bot">
-          <button
-            className="touch-btn dpad-square-btn softdrop-blue-btn"
-            onPointerDown={(e) => handlePointerDown(e, onSoftDrop)}
-            disabled={disabled}
-            title="아래로 이동"
-          >
-            <ArrowDown size={26} color="#ffffff" />
-          </button>
-        </div>
-      </div>
-
-      {/* 3. 우측 하단: 대형 DROP (하드드롭) 버튼 */}
-      <div className="touch-col-right">
-        <button
-          className="touch-btn action-big-btn drop-big-btn"
-          onPointerDown={(e) => handlePointerDown(e, onHardDrop)}
-          disabled={disabled}
-        >
-          <Zap size={22} color="#ffffff" />
-          <span>DROP</span>
-        </button>
       </div>
     </div>
   );

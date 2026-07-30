@@ -869,76 +869,96 @@ body {
   50% { transform: translateY(-4px); }
 }
 
-/* Touch Controls - Arcade D-Pad & Big Action Buttons Layout */
-.touch-controls-container {
+/* Touch Controls - Stepped Elevation Layout */
+.touch-controls-container.stepped-layout {
   display: none !important; /* Strictly hide on desktop */
   width: 100%;
-  max-width: 460px;
+  max-width: 440px;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.4rem;
-  padding: 0.25rem 0.5rem;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem;
   flex-shrink: 0;
 }
 
-/* Left Column: Big HOLD Button (Top-Left) */
-.touch-col-left {
+.touch-stealth-row {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex: 1;
+  width: 100%;
 }
 
-.hold-big-btn {
-  width: 100%;
-  max-width: 105px;
-  height: 64px;
+.touch-stealth-row.row-top {
+  justify-content: flex-start;
+}
+
+.hold-stepped-btn {
+  width: 110px;
+  height: 52px;
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.3)) !important;
   border: 2px solid #10b981 !important;
   color: #34d399 !important;
-  border-radius: 14px !important;
+  border-radius: 12px !important;
   font-family: var(--font-orbitron), var(--font-sans);
-  font-size: 1.05rem !important;
+  font-size: 1.1rem !important;
   font-weight: 900 !important;
-  letter-spacing: 1px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.15rem;
-  box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+  gap: 0.35rem;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
 }
 
-.hold-big-btn:active {
+.hold-stepped-btn:active {
   background: #10b981 !important;
   color: #ffffff !important;
   transform: scale(0.94);
 }
 
-/* Center Column: Cross D-Pad Controller */
-.touch-col-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.touch-stealth-row.row-mid {
   justify-content: center;
-  gap: 0.2rem;
-  flex: 0 0 auto;
+  align-items: flex-start;
+  gap: 1.6rem;
+  margin: 0.1rem 0;
 }
 
-.dpad-row-top, .dpad-row-bot {
-  display: flex;
-  justify-content: center;
-  width: 100%;
+.center-offset-down {
+  transform: translateY(12px); /* Subtle height offset / stepped down */
 }
 
-.dpad-row-mid {
+.center-offset-down:active {
+  transform: translateY(12px) scale(0.92) !important;
+}
+
+.touch-stealth-row.row-bot {
+  justify-content: flex-end;
+  margin-top: 0.3rem;
+}
+
+.drop-rotate-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.drop-stepped-btn {
+  width: 115px;
+  height: 54px;
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  border: 2px solid #fbbf24 !important;
+  color: #ffffff !important;
+  border-radius: 12px !important;
+  font-family: var(--font-orbitron), var(--font-sans);
+  font-size: 1.1rem !important;
+  font-weight: 900 !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2.2rem;
+  gap: 0.35rem;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.6);
+}
+
+.drop-stepped-btn:active {
+  background: #d97706 !important;
+  transform: scale(0.94);
 }
 
 .dpad-square-btn {
@@ -960,7 +980,6 @@ body {
 
 .rotate-blue-btn:active, .softdrop-blue-btn:active {
   background: #1d4ed8 !important;
-  transform: scale(0.92);
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.9) !important;
 }
 
