@@ -314,6 +314,22 @@ export function App() {
         <span className="opacity-value">{cardOpacity}%</span>
       </div>
 
+      {/* Mobile Compact Score Bar */}
+      <div className="mobile-score-bar">
+        <div className="mobile-stat">
+          <span className="lbl">SCORE</span>
+          <span className="val primary">{stats.score.toLocaleString()}</span>
+        </div>
+        <div className="mobile-stat">
+          <span className="lbl">LEVEL</span>
+          <span className="val">{stats.level}</span>
+        </div>
+        <div className="mobile-stat">
+          <span className="lbl">LINES</span>
+          <span className="val">{stats.lines}</span>
+        </div>
+      </div>
+
       {/* Main Game Section */}
       <main className="game-layout">
         {/* Left Side Column: Hold Piece & Controls */}

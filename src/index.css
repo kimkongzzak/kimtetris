@@ -1452,10 +1452,56 @@ body {
   animation: pulse 1.5s infinite alternate;
 }
 
-/* Mobile Breakpoints */
+/* Mobile Compact Score Bar */
+.mobile-score-bar {
+  display: none; /* Hide on Desktop */
+  width: 100%;
+  background: rgba(var(--bg-card-rgb), 0.85);
+  border: 1px solid var(--border-neon);
+  border-radius: 8px;
+  padding: 0.25rem 0.6rem;
+  margin-top: 0.2rem;
+  align-items: center;
+  justify-content: space-around;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme='excel'] .mobile-score-bar {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+.mobile-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-orbitron);
+  font-size: 0.75rem;
+}
+
+.mobile-stat .lbl {
+  color: var(--text-muted);
+  font-size: 0.62rem;
+}
+
+.mobile-stat .val {
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.mobile-stat .val.primary {
+  color: var(--primary-cyan);
+}
+
+[data-theme='excel'] .mobile-stat .val.primary {
+  color: #107c41 !important;
+}
+
+/* Mobile Breakpoints & Layout Optimization */
 @media (max-width: 768px) {
   .app-container {
-    padding: 0.3rem;
+    padding: 0.2rem;
   }
 
   .header-bar {
@@ -1463,72 +1509,56 @@ body {
   }
 
   .game-title {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
 
   .icon-btn span {
     display: none;
   }
 
-  .mini-grid-4x4 {
-    width: 42px;
-    height: 42px;
-    gap: 1.5px;
+  .excel-formula-bar {
+    display: none !important; /* Hide formula bar on mobile */
   }
 
-  .game-layout {
-    flex-direction: row;
-    gap: 0.35rem;
-    align-items: center;
-    justify-content: space-between;
+  .excel-bottom-tabs {
+    display: none !important; /* Hide sheet tabs on mobile */
   }
 
   .side-column {
-    width: 82px;
-    height: 100%;
+    display: none !important; /* Hide crowded side panels on mobile */
+  }
+
+  .mobile-score-bar {
+    display: flex; /* Show clean compact score bar on mobile */
+  }
+
+  .game-layout {
     flex-direction: column;
     justify-content: center;
-    gap: 0.35rem;
-  }
-
-  .side-column .glass-panel {
-    padding: 0.35rem 0.25rem;
-    border-radius: 8px;
-  }
-
-  .panel-title {
-    font-size: 0.58rem;
-    margin-bottom: 0.2rem;
-  }
-
-  .stat-group {
-    margin-bottom: 0.25rem;
-  }
-
-  .stat-label {
-    font-size: 0.55rem;
-    gap: 0.15rem;
-  }
-
-  .stat-value {
-    font-size: 0.85rem;
-  }
-
-  .neon-button {
-    padding: 0.35rem 0.2rem;
-    font-size: 0.65rem;
-    border-radius: 6px;
+    align-items: center;
+    padding: 0.1rem 0;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
   }
 
   .center-board {
-    max-height: calc(100vh - 200px);
-    max-height: calc(100dvh - 200px);
+    width: 100%;
+    max-width: 320px;
+    height: 100%;
+    max-height: calc(100vh - 250px);
+    max-height: calc(100dvh - 250px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
   }
 
   .canvas-container {
-    max-height: calc(100vh - 200px);
-    max-height: calc(100dvh - 200px);
+    max-height: calc(100vh - 250px);
+    max-height: calc(100dvh - 250px);
     border-radius: 8px;
+    aspect-ratio: 1 / 2;
   }
 
   .touch-controls-container {
@@ -1537,7 +1567,23 @@ body {
 }
 
 /* Touchscreen Devices (Smartphones & Tablets) */
-@media (pointer: coarse) {
+@media (pointer: coarse) and (max-width: 900px) {
+  .excel-formula-bar {
+    display: none !important;
+  }
+
+  .excel-bottom-tabs {
+    display: none !important;
+  }
+
+  .side-column {
+    display: none !important;
+  }
+
+  .mobile-score-bar {
+    display: flex;
+  }
+
   .touch-controls-container {
     display: flex !important;
   }
