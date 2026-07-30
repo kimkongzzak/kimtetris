@@ -1843,8 +1843,8 @@ body {
     width: 100%;
     max-width: 320px;
     height: 100%;
-    max-height: calc(100vh - 275px);
-    max-height: calc(100dvh - 275px);
+    max-height: calc(100vh - 295px);
+    max-height: calc(100dvh - 295px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1853,15 +1853,15 @@ body {
   }
 
   .canvas-container {
-    max-height: calc(100vh - 275px);
-    max-height: calc(100dvh - 275px);
+    max-height: calc(100vh - 295px);
+    max-height: calc(100dvh - 295px);
     border-radius: 8px;
     aspect-ratio: 1 / 2;
   }
 
   .excel-board-wrapper {
-    max-height: calc(100vh - 275px);
-    max-height: calc(100dvh - 275px);
+    max-height: calc(100vh - 295px);
+    max-height: calc(100dvh - 295px);
     display: flex;
     flex-direction: column;
     align-items: center;
