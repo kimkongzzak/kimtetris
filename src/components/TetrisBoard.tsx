@@ -7,13 +7,25 @@ interface TetrisBoardProps {
   currentPiece: Piece | null;
   ghostPiece: Piece | null;
   opacity?: number; // 0.0 ~ 1.0
+  theme?: 'dark' | 'light' | 'excel';
 }
+
+const EXCEL_COLORS: Record<string, string> = {
+  I: '#0284c7',
+  J: '#1d4ed8',
+  L: '#d97706',
+  O: '#ca8a04',
+  S: '#16a34a',
+  T: '#9333ea',
+  Z: '#dc2626',
+};
 
 export const TetrisBoard: React.FC<TetrisBoardProps> = ({
   board,
   currentPiece,
   ghostPiece,
   opacity = 0.85,
+  theme = 'dark',
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -22,6 +34,8 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    const isExcel = theme === 'excel';
 
     // Get canvas dimensions
     const width = canvas.width;
@@ -35,8 +49,14 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
     // Set canvas global alpha based on opacity slider
     ctx.globalAlpha = Math.max(0.01, opacity);
 
-    // Draw background grid lines & glowing border
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    // Fill canvas background
+    if (isExcel) {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, width, height);
+    }
+
+    // Draw background grid lines
+    ctx.strokeStyle = isExcel ? '#d4d4d4' : 'rgba(255, 255, 255, 0.08)';
     ctx.lineWidth = 1;
 
     for (let x = 0; x <= BOARD_WIDTH; x++) {
@@ -53,48 +73,66 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
       ctx.stroke();
     }
 
-    // Helper to draw a single cell block with rounded corners & neon gradient
+    // Helper to draw a single cell block
     const drawBlock = (
       x: number,
       y: number,
       color: string,
       glowColor?: string,
-      isGhost: boolean = false
+      isGhost: boolean = false,
+      pieceType?: string
     ) => {
       const px = x * cellWidth;
       const py = y * cellHeight;
-      const gap = 1.5;
+      const gap = isExcel ? 0.5 : 1.5;
       const sizeX = cellWidth - gap * 2;
       const sizeY = cellHeight - gap * 2;
 
       ctx.save();
 
-      if (isGhost) {
-        // Draw ghost piece (stroke border outline)
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 2;
-        ctx.setLineDash([4, 4]);
-        ctx.strokeRect(px + gap, py + gap, sizeX, sizeY);
-      } else {
-        // Draw solid glowing neon block
-        if (glowColor) {
-          ctx.shadowColor = glowColor;
-          ctx.shadowBlur = 10;
+      if (isExcel) {
+        // Excel spreadsheet cell rendering
+        if (isGhost) {
+          // Excel selected cell range green border outline
+          ctx.strokeStyle = '#107c41';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(px + 1, py + 1, cellWidth - 2, cellHeight - 2);
+          ctx.fillStyle = 'rgba(16, 124, 65, 0.15)';
+          ctx.fillRect(px + 1, py + 1, cellWidth - 2, cellHeight - 2);
+        } else {
+          const excelColor = (pieceType && EXCEL_COLORS[pieceType]) || color;
+          ctx.fillStyle = excelColor;
+          ctx.fillRect(px, py, cellWidth, cellHeight);
+
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(px, py, cellWidth, cellHeight);
         }
+      } else {
+        // Cyberpunk / Light theme rendering
+        if (isGhost) {
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 2;
+          ctx.setLineDash([4, 4]);
+          ctx.strokeRect(px + gap, py + gap, sizeX, sizeY);
+        } else {
+          if (glowColor) {
+            ctx.shadowColor = glowColor;
+            ctx.shadowBlur = 10;
+          }
 
-        // Inner block gradient
-        const grad = ctx.createLinearGradient(px, py, px + cellWidth, py + cellHeight);
-        grad.addColorStop(0, '#ffffff');
-        grad.addColorStop(0.3, color);
-        grad.addColorStop(1, '#000000');
+          const grad = ctx.createLinearGradient(px, py, px + cellWidth, py + cellHeight);
+          grad.addColorStop(0, '#ffffff');
+          grad.addColorStop(0.3, color);
+          grad.addColorStop(1, '#000000');
 
-        ctx.fillStyle = grad;
-        ctx.fillRect(px + gap, py + gap, sizeX, sizeY);
+          ctx.fillStyle = grad;
+          ctx.fillRect(px + gap, py + gap, sizeX, sizeY);
 
-        // Highlight inner border
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-        ctx.lineWidth = 1.5;
-        ctx.strokeRect(px + gap + 1, py + gap + 1, sizeX - 2, sizeY - 2);
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(px + gap + 1, py + gap + 1, sizeX - 2, sizeY - 2);
+        }
       }
 
       ctx.restore();
@@ -105,7 +143,7 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
       for (let x = 0; x < BOARD_WIDTH; x++) {
         const cell = board[y][x];
         if (cell && cell.filled) {
-          drawBlock(x, y, cell.color, cell.glowColor);
+          drawBlock(x, y, cell.color, cell.glowColor, false);
         }
       }
     }
@@ -118,7 +156,7 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
             const bx = ghostPiece.pos.x + x;
             const by = ghostPiece.pos.y + y;
             if (by >= 0) {
-              drawBlock(bx, by, ghostPiece.color, undefined, true);
+              drawBlock(bx, by, ghostPiece.color, undefined, true, ghostPiece.type);
             }
           }
         }
@@ -133,16 +171,16 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
             const bx = currentPiece.pos.x + x;
             const by = currentPiece.pos.y + y;
             if (by >= 0) {
-              drawBlock(bx, by, currentPiece.color, currentPiece.glowColor);
+              drawBlock(bx, by, currentPiece.color, currentPiece.glowColor, false, currentPiece.type);
             }
           }
         }
       }
     }
-  }, [board, currentPiece, ghostPiece, opacity]);
+  }, [board, currentPiece, ghostPiece, opacity, theme]);
 
   return (
-    <div className="canvas-container shadow-neon">
+    <div className={`canvas-container ${theme === 'excel' ? 'excel-canvas-mode' : 'shadow-neon'}`}>
       <canvas
         ref={canvasRef}
         width={300}

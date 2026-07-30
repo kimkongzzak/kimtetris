@@ -20,6 +20,7 @@ import {
   EyeOff,
   FileText,
   FileSpreadsheet,
+  Plus,
 } from 'lucide-react';
 
 export function App() {
@@ -46,7 +47,7 @@ export function App() {
 
   const [isControlsModalOpen, setIsControlsModalOpen] = useState(false);
   const [cardOpacity, setCardOpacity] = useState(85);
-  const [theme, setTheme] = useState<'dark' | 'light' | 'excel'>('dark');
+  const [theme, setTheme] = useState<'dark' | 'light' | 'excel'>('excel'); // Default to Excel theme!
   const [isStealthMode, setIsStealthMode] = useState(false);
 
   // Update CSS custom variable for opacity in real-time
@@ -61,9 +62,9 @@ export function App() {
 
   const cycleTheme = () => {
     setTheme((prev) => {
+      if (prev === 'excel') return 'dark';
       if (prev === 'dark') return 'light';
-      if (prev === 'light') return 'excel';
-      return 'dark';
+      return 'excel';
     });
   };
 
@@ -211,7 +212,7 @@ export function App() {
       <header className="header-bar">
         <div className="logo-group">
           {theme === 'excel' ? (
-            <FileSpreadsheet size={22} className="text-white" />
+            <FileSpreadsheet size={20} color="#ffffff" />
           ) : (
             <Gamepad2 size={24} className="text-cyan-400" />
           )}
@@ -249,12 +250,12 @@ export function App() {
             <span>몰컴(B)</span>
           </button>
 
-          {/* Theme Toggle Button (Dark -> Light -> Excel) */}
-          <button className="icon-btn" onClick={cycleTheme} title="테마 전환 (네온/라이트/엑셀)">
+          {/* Theme Toggle Button (Excel -> Dark -> Light) */}
+          <button className="icon-btn" onClick={cycleTheme} title="테마 전환 (엑셀/네온/라이트)">
+            {theme === 'excel' && <FileSpreadsheet size={16} className="text-emerald-400" />}
             {theme === 'dark' && <Sun size={16} className="text-yellow-400" />}
             {theme === 'light' && <Moon size={16} className="text-blue-500" />}
-            {theme === 'excel' && <FileSpreadsheet size={16} className="text-emerald-400" />}
-            <span>{theme === 'dark' ? '다크' : theme === 'light' ? '라이트' : '엑셀'}</span>
+            <span>{theme === 'excel' ? '엑셀' : theme === 'dark' ? '네온' : '라이트'}</span>
           </button>
 
           {/* Sound Toggle Button */}
@@ -348,6 +349,7 @@ export function App() {
                   currentPiece={currentPiece}
                   ghostPiece={ghostPiece}
                   opacity={cardOpacity / 100}
+                  theme={theme}
                 />
               </div>
             </div>
@@ -357,6 +359,7 @@ export function App() {
               currentPiece={currentPiece}
               ghostPiece={ghostPiece}
               opacity={cardOpacity / 100}
+              theme={theme}
             />
           )}
         </div>
@@ -367,6 +370,13 @@ export function App() {
           <ScoreBoard stats={stats} />
         </div>
       </main>
+
+      {/* Excel Sheet Bottom Tabs Bar */}
+      <div className="excel-bottom-tabs">
+        <div className="excel-tab">📊 Sheet1 (2026_실적분석)</div>
+        <div style={{ padding: '0.2rem', cursor: 'pointer' }}><Plus size={14} /></div>
+        <div style={{ marginLeft: 'auto', fontSize: '0.65rem' }}>준비</div>
+      </div>
 
       {/* Mobile Screen Touch Controls */}
       <TouchControls
