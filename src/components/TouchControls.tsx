@@ -45,19 +45,7 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
 
   return (
     <div className="touch-controls-container stepped-layout">
-      {/* 1단 (상단 좌측): 대형 HOLD 버튼 */}
-      <div className="touch-stealth-row row-top">
-        <button
-          className="touch-btn action-big-btn hold-stepped-btn"
-          onPointerDown={(e) => handlePointerDown(e, onHold)}
-          disabled={disabled}
-        >
-          <Shield size={20} />
-          <span>HOLD</span>
-        </button>
-      </div>
-
-      {/* 2단 (중앙 미묘한 단차 네비게이션): ◀, ▼ (중앙 하단 단차), ▶ */}
+      {/* 1단 (중앙 네비게이션): ◀, ▼ (소프트드롭), ▶ */}
       <div className="touch-stealth-row row-mid">
         <button
           className="touch-btn dpad-arrow-btn left-arrow-btn"
@@ -87,8 +75,17 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
         </button>
       </div>
 
-      {/* 3단 (하단 우측 세트): 🔄 (회전) + DROP (하드드롭) */}
+      {/* 2단 (하단): HOLD (좌측 - DROP 버튼과 동일한 높이) & 🔄 + DROP (우측) */}
       <div className="touch-stealth-row row-bot">
+        <button
+          className="touch-btn action-big-btn hold-stepped-btn"
+          onPointerDown={(e) => handlePointerDown(e, onHold)}
+          disabled={disabled}
+        >
+          <Shield size={20} />
+          <span>HOLD</span>
+        </button>
+
         <div className="drop-rotate-group">
           <button
             className="touch-btn dpad-square-btn rotate-blue-btn"

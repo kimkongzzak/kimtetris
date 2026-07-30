@@ -930,8 +930,11 @@ body {
 }
 
 .touch-stealth-row.row-bot {
-  justify-content: flex-end;
-  margin-top: 0.6rem; /* Increased top spacing for bottom row */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 0.5rem;
 }
 
 .drop-rotate-group {
