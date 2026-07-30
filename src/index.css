@@ -1078,6 +1078,178 @@ body {
   color: var(--accent-yellow);
 }
 
+/* Nickname Input & Form Card - Premium Cyberpunk & Clean UI */
+.nickname-form-card {
+  background: rgba(var(--bg-card-rgb), 0.7);
+  border: 1px solid var(--border-neon);
+  border-radius: 12px;
+  padding: 0.85rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+[data-theme='excel'] .nickname-form-card {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+
+.nickname-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-orbitron);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--primary-cyan);
+  margin-bottom: 0.6rem;
+}
+
+[data-theme='excel'] .nickname-title {
+  color: #107c41 !important;
+  font-family: var(--font-sans) !important;
+}
+
+.nickname-input-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.input-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.nickname-input {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1.5px solid var(--border-neon);
+  border-radius: 8px;
+  padding: 0.55rem 2.4rem 0.55rem 2.3rem;
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+[data-theme='excel'] .nickname-input {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #1f1f1f !important;
+}
+
+.nickname-input:focus {
+  border-color: var(--primary-cyan);
+  box-shadow: 0 0 12px var(--primary-glow);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.nickname-input:focus ~ .char-counter {
+  color: var(--primary-cyan);
+}
+
+.input-wrapper:focus-within .input-icon {
+  color: var(--primary-cyan);
+}
+
+.char-counter {
+  position: absolute;
+  right: 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-family: var(--font-orbitron);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.submit-nick-btn {
+  background: linear-gradient(135deg, var(--primary-cyan), #0284c7);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+  box-shadow: 0 0 10px var(--primary-glow);
+  transition: all 0.15s ease;
+}
+
+.submit-nick-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 0 16px var(--primary-glow);
+}
+
+.submit-nick-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+[data-theme='excel'] .submit-nick-btn {
+  background: #107c41 !important;
+  box-shadow: none !important;
+}
+
+.submitted-msg {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 8px;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #34d399;
+}
+
+/* Menu Button Group & Side Indicators */
+.menu-btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.side-restart-btn {
+  justify-content: center;
+  font-size: 0.75rem;
+  padding: 0.4rem;
+}
+
+.paused-side-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background: rgba(234, 179, 8, 0.15);
+  border: 1px solid rgba(234, 179, 8, 0.4);
+  border-radius: 6px;
+  padding: 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #facc15;
+  animation: pulse 1.5s infinite alternate;
+}
+
 /* Mobile Breakpoints */
 @media (max-width: 768px) {
   .app-container {

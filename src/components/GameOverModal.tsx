@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GameStats } from '../types/tetris';
-import { Trophy, RefreshCw, Layers, Zap, Send, CheckCircle2 } from 'lucide-react';
+import { Trophy, RefreshCw, Layers, Zap, Send, CheckCircle2, User } from 'lucide-react';
 
 interface GameOverModalProps {
   stats: GameStats;
@@ -65,28 +65,36 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
             </div>
           </div>
 
-          {/* Always Show Nickname Submission Form if score > 0 */}
+          {/* Nickname Submission Form with Premium Input UI */}
           {stats.score > 0 && (
             <div className="nickname-form-card">
-              <h4 className="nickname-title">🏆 점수 & 닉네임 기록 등록</h4>
+              <h4 className="nickname-title">
+                <Trophy size={15} className="text-yellow-400" />
+                <span>명예의 전당 점수 등록</span>
+              </h4>
               {isSubmitted ? (
                 <div className="submitted-msg">
                   <CheckCircle2 size={18} className="text-emerald-400" />
-                  <span>서버 명예의 전당에 성공적으로 등록되었습니다!</span>
+                  <span>명예의 전당 DB에 성공적으로 등록되었습니다!</span>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="nickname-input-group">
-                  <input
-                    type="text"
-                    placeholder="닉네임 입력 (최대 12자)"
-                    maxLength={12}
-                    value={nickname}
-                    onChange={(e) => setNickname(e.target.value)}
-                    className="nickname-input"
-                    autoFocus
-                  />
+                  <div className="input-wrapper">
+                    <User size={16} className="input-icon" />
+                    <input
+                      type="text"
+                      placeholder="닉네임 입력 (최대 12자)"
+                      maxLength={12}
+                      value={nickname}
+                      onChange={(e) => setNickname(e.target.value)}
+                      className="nickname-input"
+                      autoFocus
+                    />
+                    <span className="char-counter">{nickname.length}/12</span>
+                  </div>
                   <button type="submit" className="submit-nick-btn" disabled={!nickname.trim()}>
-                    <Send size={16} /> 등록
+                    <Send size={15} />
+                    <span>등록</span>
                   </button>
                 </form>
               )}

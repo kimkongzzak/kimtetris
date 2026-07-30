@@ -327,28 +327,34 @@ export function App() {
               <button className="neon-button primary-btn" onClick={startGame}>
                 <Play size={16} /> 시작하기
               </button>
-            ) : gameState === 'PLAYING' || gameState === 'PAUSED' ? (
-              <div className="menu-btn-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                <button className="neon-button pause-big-btn" onClick={togglePause}>
-                  {gameState === 'PAUSED' ? (
-                    <>
-                      <Play size={18} /> 재개
-                    </>
-                  ) : (
-                    <>
-                      <Pause size={18} /> 일시정지 (ESC)
-                    </>
-                  )}
+            ) : gameState === 'PLAYING' ? (
+              <div className="menu-btn-group">
+                <button className="neon-button pause-big-btn" onClick={togglePause} title="일시정지 (ESC)">
+                  <Pause size={18} /> 일시정지 (ESC)
                 </button>
 
                 <button
-                  className="icon-btn"
+                  className="icon-btn side-restart-btn"
                   onClick={startGame}
-                  style={{ justifyContent: 'center', fontSize: '0.75rem', padding: '0.35rem' }}
+                  title="게임 다시 시작"
                 >
                   <RotateCcw size={14} /> 재시작
                 </button>
 
+                <button
+                  className="end-game-btn small-end-btn"
+                  onClick={endGame}
+                  title="현재 게임 종료 및 점수 기록"
+                >
+                  <Square size={11} /> 게임종료
+                </button>
+              </div>
+            ) : gameState === 'PAUSED' ? (
+              <div className="menu-btn-group">
+                <div className="paused-side-indicator">
+                  <Pause size={16} />
+                  <span>일시정지 중</span>
+                </div>
                 <button
                   className="end-game-btn small-end-btn"
                   onClick={endGame}
