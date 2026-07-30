@@ -29,15 +29,11 @@ export const PauseModal: React.FC<PauseModalProps> = ({
           </p>
         </div>
 
-        <div className="modal-footer" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <div className="modal-footer" style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
           <button className="neon-button primary-btn" onClick={onResume}>
             <Play size={18} /> 게임 재개 (RESUME)
           </button>
-          <button
-            className="icon-btn"
-            onClick={onRestart}
-            style={{ justifyContent: 'center', padding: '0.55rem', width: '100%' }}
-          >
+          <button className="neon-button secondary-btn restart-btn" onClick={onRestart}>
             <RotateCcw size={16} /> 게임 다시 시작 (RESTART)
           </button>
         </div>
