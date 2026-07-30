@@ -429,7 +429,7 @@ export function App() {
           {theme === 'excel' ? (
             <div className="excel-board-wrapper">
               <div className="excel-col-headers">
-                <div style={{ width: '16px' }}></div>
+                <div style={{ width: '20px', flexShrink: 0 }}></div>
                 {['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].map((col) => (
                   <div key={col} className="excel-col-cell">{col}</div>
                 ))}

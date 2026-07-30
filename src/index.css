@@ -271,26 +271,42 @@ body {
   overflow: hidden;
   background: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  height: 100%;
+  max-height: calc(100vh - 140px);
+  max-height: calc(100dvh - 140px);
+  box-sizing: border-box;
 }
 
 .excel-col-headers {
   display: flex;
   background: #f1f5f9;
   border-bottom: 1px solid #cbd5e1;
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   font-weight: bold;
-  color: #64748b;
+  color: #475569;
   text-align: center;
+  height: 18px;
+  min-height: 18px;
+  align-items: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .excel-col-cell {
   flex: 1;
   border-right: 1px solid #cbd5e1;
-  padding: 0.1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  line-height: 1;
 }
 
 .excel-board-body {
   display: flex;
+  flex: 1;
+  min-height: 0;
+  height: calc(100% - 18px);
 }
 
 .excel-row-headers {
@@ -298,10 +314,13 @@ body {
   flex-direction: column;
   background: #f1f5f9;
   border-right: 1px solid #cbd5e1;
-  font-size: 0.55rem;
+  font-size: 0.58rem;
   font-weight: bold;
-  color: #64748b;
-  width: 16px;
+  color: #475569;
+  width: 20px;
+  flex-shrink: 0;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .excel-row-cell {
@@ -310,6 +329,7 @@ body {
   align-items: center;
   justify-content: center;
   border-bottom: 1px solid #e2e8f0;
+  line-height: 1;
 }
 
 [data-theme='excel'] .canvas-container {
@@ -1832,7 +1852,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 7px 0; /* Exactly ~7px clean top & bottom spacing as requested */
+    padding: 4px 0;
     width: 100%;
     flex: 1;
     min-height: 0;
@@ -1842,8 +1862,8 @@ body {
     width: 100%;
     max-width: 320px;
     height: 100%;
-    max-height: calc(100vh - 240px);
-    max-height: calc(100dvh - 240px);
+    max-height: calc(100vh - 220px);
+    max-height: calc(100dvh - 220px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1851,19 +1871,26 @@ body {
   }
 
   .canvas-container {
-    max-height: calc(100vh - 240px);
-    max-height: calc(100dvh - 240px);
+    max-height: calc(100vh - 238px);
+    max-height: calc(100dvh - 238px);
     border-radius: 8px;
     aspect-ratio: 1 / 2;
   }
 
   .excel-board-wrapper {
-    max-height: calc(100vh - 240px);
-    max-height: calc(100dvh - 240px);
+    height: 100%;
+    max-height: calc(100vh - 220px);
+    max-height: calc(100dvh - 220px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+
+  .excel-board-body {
+    height: calc(100% - 18px);
+    max-height: calc(100vh - 238px);
+    max-height: calc(100dvh - 238px);
   }
 
   .touch-controls-container {
