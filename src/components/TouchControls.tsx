@@ -37,7 +37,8 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
     }
   };
 
-  const handleAction = (action: () => void) => (e: React.TouchEvent | React.MouseEvent) => {
+  // Modern pointer down handler preventing synthetic double-click events
+  const handlePointerDown = (action: () => void) => (e: React.PointerEvent) => {
     e.preventDefault();
     if (disabled) return;
     triggerHaptic();
@@ -46,35 +47,32 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
 
   return (
     <div className="touch-controls-container">
-      {/* Action Buttons Top Bar (Hold, Rotate, Hard Drop) */}
+      {/* Action Buttons Top Bar (Hold, Hard Drop, Rotate) */}
       <div className="touch-actions-row">
         <button
           className="touch-btn action-btn hold-btn"
-          onTouchStart={handleAction(onHold)}
-          onClick={handleAction(onHold)}
+          onPointerDown={handlePointerDown(onHold)}
           aria-label="Hold"
         >
-          <Bookmark size={20} />
+          <Bookmark size={18} />
           <span>HOLD</span>
         </button>
 
         <button
           className="touch-btn action-btn hard-drop-btn"
-          onTouchStart={handleAction(onHardDrop)}
-          onClick={handleAction(onHardDrop)}
+          onPointerDown={handlePointerDown(onHardDrop)}
           aria-label="Hard Drop"
         >
-          <Zap size={22} />
+          <Zap size={20} />
           <span>DROP</span>
         </button>
 
         <button
           className="touch-btn action-btn rotate-btn"
-          onTouchStart={handleAction(onRotate)}
-          onClick={handleAction(onRotate)}
+          onPointerDown={handlePointerDown(onRotate)}
           aria-label="Rotate"
         >
-          <RotateCw size={22} />
+          <RotateCw size={20} />
           <span>ROTATE</span>
         </button>
       </div>
@@ -83,29 +81,26 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
       <div className="touch-dpad-row">
         <button
           className="touch-btn dpad-btn"
-          onTouchStart={handleAction(onMoveLeft)}
-          onClick={handleAction(onMoveLeft)}
+          onPointerDown={handlePointerDown(onMoveLeft)}
           aria-label="Move Left"
         >
-          <ArrowLeft size={28} />
+          <ArrowLeft size={24} />
         </button>
 
         <button
           className="touch-btn dpad-btn"
-          onTouchStart={handleAction(onSoftDrop)}
-          onClick={handleAction(onSoftDrop)}
+          onPointerDown={handlePointerDown(onSoftDrop)}
           aria-label="Soft Drop"
         >
-          <ArrowDown size={28} />
+          <ArrowDown size={24} />
         </button>
 
         <button
           className="touch-btn dpad-btn"
-          onTouchStart={handleAction(onMoveRight)}
-          onClick={handleAction(onMoveRight)}
+          onPointerDown={handlePointerDown(onMoveRight)}
           aria-label="Move Right"
         >
-          <ArrowRight size={28} />
+          <ArrowRight size={24} />
         </button>
       </div>
     </div>
