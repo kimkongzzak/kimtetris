@@ -1731,6 +1731,10 @@ body {
     display: none;
   }
 
+  .v-menu-btn .btn-txt {
+    display: none !important; /* Hide text labels in menu buttons on mobile ONLY */
+  }
+
   .opacity-slider-row {
     display: none !important; /* Hide block opacity slider on mobile ONLY as explicitly requested */
   }
