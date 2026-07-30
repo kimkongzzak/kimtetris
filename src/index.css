@@ -1607,6 +1607,26 @@ body {
   color: #107c41 !important;
 }
 
+/* Icon-Only Menu Button Group */
+.icon-menu-btn-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
+}
+
+.icon-only-menu-btn {
+  width: 100% !important;
+  height: 38px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 8px !important;
+  margin-top: 0 !important;
+}
+
 /* Mobile Breakpoints & Layout Optimization */
 @media (max-width: 768px) {
   .app-container {
@@ -1623,6 +1643,10 @@ body {
 
   .icon-btn span {
     display: none;
+  }
+
+  .opacity-slider-row {
+    display: none !important; /* Hide block opacity slider on mobile ONLY as explicitly requested */
   }
 
   .excel-formula-bar {
@@ -1655,8 +1679,8 @@ body {
     width: 100%;
     max-width: 320px;
     height: 100%;
-    max-height: calc(100vh - 250px);
-    max-height: calc(100dvh - 250px);
+    max-height: calc(100vh - 175px);
+    max-height: calc(100dvh - 175px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1664,8 +1688,8 @@ body {
   }
 
   .canvas-container {
-    max-height: calc(100vh - 250px);
-    max-height: calc(100dvh - 250px);
+    max-height: calc(100vh - 175px);
+    max-height: calc(100dvh - 175px);
     border-radius: 8px;
     aspect-ratio: 1 / 2;
   }
@@ -1677,6 +1701,10 @@ body {
 
 /* Touchscreen Devices (Smartphones & Tablets) */
 @media (pointer: coarse) and (max-width: 900px) {
+  .opacity-slider-row {
+    display: none !important;
+  }
+
   .excel-formula-bar {
     display: none !important;
   }
