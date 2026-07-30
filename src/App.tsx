@@ -338,7 +338,7 @@ export function App() {
                 </button>
 
                 <button
-                  className="icon-btn side-restart-btn"
+                  className="neon-button secondary-btn side-restart-btn"
                   onClick={startGame}
                   title="게임 다시 시작"
                 >

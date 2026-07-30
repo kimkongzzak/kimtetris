@@ -1345,8 +1345,21 @@ body {
 
 .side-restart-btn {
   justify-content: center;
-  font-size: 0.75rem;
-  padding: 0.4rem;
+  font-size: 0.75rem !important;
+  padding: 0.45rem 0.35rem !important;
+  width: 100%;
+}
+
+[data-theme='excel'] .side-restart-btn {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #1f1f1f !important;
+  border-radius: 4px !important;
+}
+
+[data-theme='excel'] .side-restart-btn:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
 }
 
 .paused-side-indicator {
