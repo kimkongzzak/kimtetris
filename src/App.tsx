@@ -15,6 +15,8 @@ import {
   HelpCircle,
   Gamepad2,
   Sliders,
+  Sun,
+  Moon,
 } from 'lucide-react';
 
 export function App() {
@@ -41,11 +43,21 @@ export function App() {
 
   const [isControlsModalOpen, setIsControlsModalOpen] = useState(false);
   const [cardOpacity, setCardOpacity] = useState(85);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   // Update CSS custom variable for opacity in real-time
   useEffect(() => {
     document.documentElement.style.setProperty('--card-opacity', (cardOpacity / 100).toString());
   }, [cardOpacity]);
+
+  // Update Theme attribute
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   // Keyboard Event Listeners
   useEffect(() => {
@@ -135,10 +147,17 @@ export function App() {
             <span className="opacity-value">{cardOpacity}%</span>
           </div>
 
+          {/* Dark / Light Mode Toggle Button */}
+          <button className="icon-btn" onClick={toggleTheme} title="테마 전환 (다크/라이트)">
+            {theme === 'dark' ? <Sun size={18} className="text-yellow-400" /> : <Moon size={18} className="text-blue-500" />}
+          </button>
+
+          {/* Sound Toggle Button */}
           <button className="icon-btn" onClick={toggleSound} title="사운드 온/오프">
             {soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
           </button>
 
+          {/* Controls Guide Button */}
           <button
             className="icon-btn"
             onClick={() => setIsControlsModalOpen(true)}
