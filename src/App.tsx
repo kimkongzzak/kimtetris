@@ -330,6 +330,41 @@ export function App() {
         </div>
       </div>
 
+      {/* Mobile Floating Left Control Buttons (Play / Pause / Restart) */}
+      <div className="mobile-floating-left-controls">
+        {gameState === 'IDLE' ? (
+          <button
+            className="mobile-float-btn play-btn"
+            onClick={startGame}
+            title="게임 시작"
+          >
+            <Play size={24} color="#ffffff" />
+          </button>
+        ) : (
+          <>
+            <button
+              className="mobile-float-btn pause-btn"
+              onClick={togglePause}
+              title={gameState === 'PAUSED' ? '게임 재개' : '일시정지'}
+            >
+              {gameState === 'PAUSED' ? (
+                <Play size={24} color="#ffffff" />
+              ) : (
+                <Pause size={24} color="#ffffff" />
+              )}
+            </button>
+
+            <button
+              className="mobile-float-btn restart-btn"
+              onClick={startGame}
+              title="새 게임 (재시작)"
+            >
+              <RotateCcw size={22} color="#ffffff" />
+            </button>
+          </>
+        )}
+      </div>
+
       {/* Main Game Section */}
       <main className="game-layout">
         {/* Left Side Column: Hold Piece & Controls */}
