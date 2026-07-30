@@ -7,6 +7,7 @@ import { TouchControls } from './components/TouchControls';
 import { ControlsModal } from './components/ControlsModal';
 import { GameOverModal } from './components/GameOverModal';
 import { PauseModal } from './components/PauseModal';
+import { LeaderboardModal } from './components/LeaderboardModal';
 import {
   Play,
   Pause,
@@ -23,6 +24,7 @@ import {
   FileSpreadsheet,
   Plus,
   Square,
+  Trophy,
 } from 'lucide-react';
 
 export function App() {
@@ -50,6 +52,7 @@ export function App() {
   } = useTetris();
 
   const [isControlsModalOpen, setIsControlsModalOpen] = useState(false);
+  const [isLeaderboardModalOpen, setIsLeaderboardModalOpen] = useState(false);
   const [cardOpacity, setCardOpacity] = useState(85);
   const [theme, setTheme] = useState<'dark' | 'light' | 'excel'>('excel');
   const [isStealthMode, setIsStealthMode] = useState(false);
@@ -219,6 +222,16 @@ export function App() {
         </div>
 
         <div className="header-actions">
+          {/* Global Leaderboard Button */}
+          <button
+            className="icon-btn rank-btn"
+            onClick={() => setIsLeaderboardModalOpen(true)}
+            title="전 세계 순위보기"
+          >
+            <Trophy size={16} className="text-yellow-400" />
+            <span>순위보기</span>
+          </button>
+
           {/* Boss Key / Stealth Mode Toggle Button */}
           <button
             className={`icon-btn ${isStealthMode ? 'stealth-active' : ''}`}
@@ -298,28 +311,36 @@ export function App() {
                 <Play size={16} /> 시작하기
               </button>
             ) : gameState === 'PLAYING' || gameState === 'PAUSED' ? (
-              <div className="menu-btn-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                <button className="neon-button" onClick={togglePause}>
+              <div className="menu-btn-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                {/* Big prominent Pause Button */}
+                <button className="neon-button pause-big-btn" onClick={togglePause}>
                   {gameState === 'PAUSED' ? (
                     <>
-                      <Play size={14} /> 재개
+                      <Play size={18} /> 재개
                     </>
                   ) : (
                     <>
-                      <Pause size={14} /> 일시정지
+                      <Pause size={18} /> 일시정지
                     </>
                   )}
                 </button>
-                {/* Red End Game Button below Pause */}
-                <button className="end-game-btn" onClick={endGame} title="현재 게임 종료 및 점수 기록">
-                  <Square size={13} /> 게임종료
-                </button>
+
+                {/* Restart Button */}
                 <button
                   className="icon-btn"
                   onClick={startGame}
-                  style={{ justifyContent: 'center', fontSize: '0.7rem', padding: '0.3rem' }}
+                  style={{ justifyContent: 'center', fontSize: '0.75rem', padding: '0.35rem' }}
                 >
-                  <RotateCcw size={13} /> 재시작
+                  <RotateCcw size={14} /> 재시작
+                </button>
+
+                {/* Small End Game Button at the bottom */}
+                <button
+                  className="end-game-btn small-end-btn"
+                  onClick={endGame}
+                  title="현재 게임 종료 및 점수 기록"
+                >
+                  <Square size={11} /> 게임종료
                 </button>
               </div>
             ) : (
@@ -402,14 +423,20 @@ export function App() {
         onClose={() => setIsControlsModalOpen(false)}
       />
 
-      {/* Auto / Manual Pause Modal */}
+      <LeaderboardModal
+        isOpen={isLeaderboardModalOpen}
+        onClose={() => setIsLeaderboardModalOpen(false)}
+        topScores={stats.topScores || []}
+        currentHighScore={stats.highScore}
+        currentHighScoreNickname={stats.highScoreNickname}
+      />
+
       <PauseModal
         isOpen={gameState === 'PAUSED'}
         onResume={togglePause}
         onRestart={startGame}
       />
 
-      {/* Game Over & High Score Submission Modal */}
       {gameState === 'GAMEOVER' && (
         <GameOverModal
           stats={stats}

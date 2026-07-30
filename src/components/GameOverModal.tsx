@@ -29,9 +29,13 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
       <div className="glass-panel modal-content game-over-modal">
         <div className="game-over-header">
           <h1 className="glitch-text">GAME OVER</h1>
-          {isNewHighScore && (
+          {isNewHighScore ? (
             <div className="new-record-badge">
-              <Trophy size={18} /> ✨ 신기록 달성! 전설 등록 가능 ✨
+              <Trophy size={18} /> ✨ 최고 기록 갱신! 1위 등극 ✨
+            </div>
+          ) : (
+            <div className="record-badge-sub">
+              기록을 명예의 전당에 남기세요!
             </div>
           )}
         </div>
@@ -44,7 +48,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
             </div>
 
             <div className="final-stat">
-              <span className="label"><Trophy size={16} /> RECORD HOLDER ({stats.highScoreNickname})</span>
+              <span className="label"><Trophy size={16} /> TOP RECORD ({stats.highScoreNickname})</span>
               <span className="value highlight">{stats.highScore.toLocaleString()}</span>
             </div>
 
@@ -61,14 +65,14 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
             </div>
           </div>
 
-          {/* Nickname Submission Form */}
+          {/* Always Show Nickname Submission Form if score > 0 */}
           {stats.score > 0 && (
             <div className="nickname-form-card">
-              <h4 className="nickname-title">🏆 서버 명예의 전당 닉네임 등록</h4>
+              <h4 className="nickname-title">🏆 점수 & 닉네임 기록 등록</h4>
               {isSubmitted ? (
                 <div className="submitted-msg">
                   <CheckCircle2 size={18} className="text-emerald-400" />
-                  <span>서버에 닉네임과 점수가 성공적으로 저장되었습니다!</span>
+                  <span>서버 명예의 전당에 성공적으로 등록되었습니다!</span>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="nickname-input-group">
@@ -92,7 +96,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
           {/* Top Scores Leaderboard Preview */}
           {stats.topScores && stats.topScores.length > 0 && (
             <div className="leaderboard-preview">
-              <h5>📊 Top 5 명예의 전당</h5>
+              <h5>📊 명예의 전당 (Top 5)</h5>
               <div className="leaderboard-list">
                 {stats.topScores.slice(0, 5).map((entry, idx) => (
                   <div key={idx} className="leaderboard-item">
