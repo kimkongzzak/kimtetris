@@ -80,9 +80,10 @@ export function App() {
     });
   };
 
-  // Keyboard Event Listeners (including Boss Key 'B')
+  // Keyboard Event Listeners (including Boss Key 'B' & ESC for Pause)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Boss Key 'B' or 'b' toggles Stealth Mode instantly
       if (e.key === 'b' || e.key === 'B') {
         e.preventDefault();
         toggleStealth();
@@ -91,6 +92,24 @@ export function App() {
 
       if (isStealthMode) return;
 
+      // ESC Key Listener for Pause / Resume / Modal Close
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        e.preventDefault();
+        if (isControlsModalOpen) {
+          setIsControlsModalOpen(false);
+          return;
+        }
+        if (isLeaderboardModalOpen) {
+          setIsLeaderboardModalOpen(false);
+          return;
+        }
+        if (gameState === 'PLAYING' || gameState === 'PAUSED') {
+          togglePause();
+          return;
+        }
+      }
+
+      // Prevent default page scroll on game controls
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
         e.preventDefault();
       }
@@ -126,7 +145,6 @@ export function App() {
           break;
         case 'p':
         case 'P':
-        case 'Escape':
           togglePause();
           break;
         default:
@@ -139,6 +157,8 @@ export function App() {
   }, [
     gameState,
     isStealthMode,
+    isControlsModalOpen,
+    isLeaderboardModalOpen,
     moveLeft,
     moveRight,
     rotate,
@@ -320,7 +340,7 @@ export function App() {
                     </>
                   ) : (
                     <>
-                      <Pause size={18} /> 일시정지
+                      <Pause size={18} /> 일시정지 (ESC)
                     </>
                   )}
                 </button>
