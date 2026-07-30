@@ -43,6 +43,7 @@ export function App() {
     softDrop,
     hardDrop,
     hold,
+    submitHighScore,
   } = useTetris();
 
   const [isControlsModalOpen, setIsControlsModalOpen] = useState(false);
@@ -76,7 +77,6 @@ export function App() {
   // Keyboard Event Listeners (including Boss Key 'B')
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Boss Key 'B' or 'b' toggles Stealth Mode instantly
       if (e.key === 'b' || e.key === 'B') {
         e.preventDefault();
         toggleStealth();
@@ -85,7 +85,6 @@ export function App() {
 
       if (isStealthMode) return;
 
-      // Prevent default page scroll on game controls
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
         e.preventDefault();
       }
@@ -260,7 +259,7 @@ export function App() {
         </span>
       </div>
 
-      {/* Dedicated Full-Width Transparency Control Row (Always visible & wide for precision) */}
+      {/* Dedicated Full-Width Transparency Control Row */}
       <div className="opacity-slider-row" title="블록 투명도 섬세 조절 (0% ~ 100%)">
         <label htmlFor="opacity-range" className="opacity-slider-label">
           <Sliders size={14} />
@@ -391,7 +390,11 @@ export function App() {
       />
 
       {gameState === 'GAMEOVER' && (
-        <GameOverModal stats={stats} onRestart={startGame} />
+        <GameOverModal
+          stats={stats}
+          onRestart={startGame}
+          onSubmitHighScore={submitHighScore}
+        />
       )}
     </div>
   );

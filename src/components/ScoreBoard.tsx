@@ -1,6 +1,6 @@
 import React from 'react';
 import { GameStats } from '../types/tetris';
-import { Trophy, Zap, Layers, Hash } from 'lucide-react';
+import { Trophy, Zap, Layers, Hash, Crown } from 'lucide-react';
 
 interface ScoreBoardProps {
   stats: GameStats;
@@ -13,8 +13,8 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({ stats }) => {
 
       <div className="stat-group highlight">
         <div className="stat-label">
-          <Trophy size={16} className="text-yellow-400" />
-          <span>BEST SCORE</span>
+          <Crown size={14} className="text-yellow-400" />
+          <span>LEGEND ({stats.highScoreNickname || '익명'})</span>
         </div>
         <div className="stat-value text-yellow-400">
           {stats.highScore.toLocaleString()}
@@ -23,7 +23,7 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({ stats }) => {
 
       <div className="stat-group">
         <div className="stat-label">
-          <Zap size={16} className="text-cyan-400" />
+          <Zap size={14} className="text-cyan-400" />
           <span>SCORE</span>
         </div>
         <div className="stat-value text-cyan-400">
@@ -34,7 +34,7 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({ stats }) => {
       <div className="stat-row">
         <div className="stat-group compact">
           <div className="stat-label">
-            <Hash size={14} className="text-purple-400" />
+            <Hash size={12} className="text-purple-400" />
             <span>LEVEL</span>
           </div>
           <div className="stat-value">{stats.level}</div>
@@ -42,7 +42,7 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({ stats }) => {
 
         <div className="stat-group compact">
           <div className="stat-label">
-            <Layers size={14} className="text-emerald-400" />
+            <Layers size={12} className="text-emerald-400" />
             <span>LINES</span>
           </div>
           <div className="stat-value">{stats.lines}</div>

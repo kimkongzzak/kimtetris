@@ -1,14 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GameStats } from '../types/tetris';
-import { Trophy, RefreshCw, Layers, Zap } from 'lucide-react';
+import { Trophy, RefreshCw, Layers, Zap, Send, CheckCircle2 } from 'lucide-react';
 
 interface GameOverModalProps {
   stats: GameStats;
   onRestart: () => void;
+  onSubmitHighScore: (nickname: string, score: number) => void;
 }
 
-export const GameOverModal: React.FC<GameOverModalProps> = ({ stats, onRestart }) => {
+export const GameOverModal: React.FC<GameOverModalProps> = ({
+  stats,
+  onRestart,
+  onSubmitHighScore,
+}) => {
   const isNewHighScore = stats.score > 0 && stats.score >= stats.highScore;
+  const [nickname, setNickname] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!nickname.trim() || isSubmitted) return;
+    onSubmitHighScore(nickname.trim(), stats.score);
+    setIsSubmitted(true);
+  };
 
   return (
     <div className="modal-backdrop">
@@ -17,7 +31,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({ stats, onRestart }
           <h1 className="glitch-text">GAME OVER</h1>
           {isNewHighScore && (
             <div className="new-record-badge">
-              <Trophy size={18} /> NEW HIGH SCORE!
+              <Trophy size={18} /> ✨ 신기록 달성! 전설 등록 가능 ✨
             </div>
           )}
         </div>
@@ -30,13 +44,13 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({ stats, onRestart }
             </div>
 
             <div className="final-stat">
-              <span className="label"><Trophy size={16} /> BEST RECORD</span>
+              <span className="label"><Trophy size={16} /> RECORD HOLDER ({stats.highScoreNickname})</span>
               <span className="value highlight">{stats.highScore.toLocaleString()}</span>
             </div>
 
             <div className="final-stat-row">
               <div className="final-stat compact">
-                <span className="label">LEVEL</span>
+                <span className="label">FINAL LEVEL</span>
                 <span className="value">{stats.level}</span>
               </div>
 
@@ -46,11 +60,55 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({ stats, onRestart }
               </div>
             </div>
           </div>
+
+          {/* Nickname Submission Form */}
+          {stats.score > 0 && (
+            <div className="nickname-form-card">
+              <h4 className="nickname-title">🏆 서버 명예의 전당 닉네임 등록</h4>
+              {isSubmitted ? (
+                <div className="submitted-msg">
+                  <CheckCircle2 size={18} className="text-emerald-400" />
+                  <span>서버에 닉네임과 점수가 성공적으로 저장되었습니다!</span>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="nickname-input-group">
+                  <input
+                    type="text"
+                    placeholder="닉네임 입력 (최대 12자)"
+                    maxLength={12}
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
+                    className="nickname-input"
+                    autoFocus
+                  />
+                  <button type="submit" className="submit-nick-btn" disabled={!nickname.trim()}>
+                    <Send size={16} /> 등록
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
+
+          {/* Top Scores Leaderboard Preview */}
+          {stats.topScores && stats.topScores.length > 0 && (
+            <div className="leaderboard-preview">
+              <h5>📊 Top 5 명예의 전당</h5>
+              <div className="leaderboard-list">
+                {stats.topScores.slice(0, 5).map((entry, idx) => (
+                  <div key={idx} className="leaderboard-item">
+                    <span className="rank">#{idx + 1}</span>
+                    <span className="name">{entry.nickname}</span>
+                    <span className="score">{entry.score.toLocaleString()}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="modal-footer">
           <button className="neon-button primary-btn restart-btn" onClick={onRestart}>
-            <RefreshCw size={20} /> 다시 시작하기 (RETRY)
+            <RefreshCw size={18} /> 다시 시작하기 (RETRY)
           </button>
         </div>
       </div>

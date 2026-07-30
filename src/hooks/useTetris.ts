@@ -6,6 +6,7 @@ import {
   BoardGrid,
   GameState,
   GameStats,
+  LeaderboardEntry,
 } from '../types/tetris';
 import {
   BOARD_WIDTH,
@@ -17,11 +18,13 @@ import {
   getRotatedPiece,
   getGhostPiece,
   calculateScore,
+  calculateLevel,
   getDropInterval,
 } from '../utils/tetris';
 import { soundManager } from '../utils/audio';
 
 const HIGH_SCORE_KEY = 'CYBER_TETRIS_HIGH_SCORE';
+const HIGH_SCORE_NICK_KEY = 'CYBER_TETRIS_HIGH_SCORE_NICK';
 
 export const useTetris = () => {
   const [board, setBoard] = useState<BoardGrid>(createEmptyBoard());
@@ -33,21 +36,85 @@ export const useTetris = () => {
 
   const [stats, setStats] = useState<GameStats>(() => {
     const savedHighScore = localStorage.getItem(HIGH_SCORE_KEY);
+    const savedNick = localStorage.getItem(HIGH_SCORE_NICK_KEY);
     return {
       score: 0,
-      highScore: savedHighScore ? parseInt(savedHighScore, 10) : 0,
+      highScore: savedHighScore ? parseInt(savedHighScore, 10) : 10000,
+      highScoreNickname: savedNick || 'CYBER_LEGEND',
       level: 1,
       lines: 0,
       combo: -1,
+      topScores: [],
     };
   });
 
   const [soundEnabled, setSoundEnabledState] = useState<boolean>(true);
 
-  // Refs for bag & loop
+  // Refs
   const bagRef = useRef<BagRandomizer>(new BagRandomizer());
   const gameLoopRef = useRef<number | null>(null);
   const lastTickRef = useRef<number>(0);
+
+  // Fetch Server High Score & Leaderboard on Initial Load
+  useEffect(() => {
+    const fetchServerHighScore = async () => {
+      try {
+        const res = await fetch('/api/highscore');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && typeof data.highScore === 'number') {
+            setStats((prev) => {
+              const bestScore = Math.max(prev.highScore, data.highScore);
+              return {
+                ...prev,
+                highScore: bestScore,
+                highScoreNickname: data.nickname || prev.highScoreNickname,
+                topScores: data.topScores || [],
+              };
+            });
+          }
+        }
+      } catch {
+        // Fallback to local storage if offline
+      }
+    };
+
+    fetchServerHighScore();
+  }, []);
+
+  // Submit new high score & nickname to Server
+  const submitHighScore = useCallback(async (nickname: string, scoreToSubmit: number) => {
+    const cleanNick = nickname.trim().slice(0, 12) || '익명';
+    localStorage.setItem(HIGH_SCORE_KEY, scoreToSubmit.toString());
+    localStorage.setItem(HIGH_SCORE_NICK_KEY, cleanNick);
+
+    setStats((prev) => ({
+      ...prev,
+      highScore: scoreToSubmit,
+      highScoreNickname: cleanNick,
+    }));
+
+    try {
+      const res = await fetch('/api/highscore', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nickname: cleanNick, score: scoreToSubmit }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.globalRecord) {
+          setStats((prev) => ({
+            ...prev,
+            highScore: data.globalRecord.highScore,
+            highScoreNickname: data.globalRecord.nickname,
+            topScores: data.globalRecord.topScores,
+          }));
+        }
+      }
+    } catch {
+      // Offline fallback
+    }
+  }, []);
 
   // Toggle sound
   const toggleSound = useCallback(() => {
@@ -58,15 +125,7 @@ export const useTetris = () => {
     });
   }, []);
 
-  // Update high score in local storage
-  useEffect(() => {
-    if (stats.score > stats.highScore) {
-      setStats((prev) => ({ ...prev, highScore: prev.score }));
-      localStorage.setItem(HIGH_SCORE_KEY, stats.score.toString());
-    }
-  }, [stats.score, stats.highScore]);
-
-  // Lock current piece to grid & check line clears
+  // Lock current piece & check line clears
   const lockPiece = useCallback((pieceToLock: Piece, currentBoard: BoardGrid) => {
     const newBoard = currentBoard.map((row) => [...row]);
 
@@ -86,7 +145,6 @@ export const useTetris = () => {
       }
     }
 
-    // Check for cleared lines
     let clearedLinesCount = 0;
     const filteredBoard = newBoard.filter((row) => {
       const isFull = row.every((cell) => cell !== null);
@@ -98,11 +156,9 @@ export const useTetris = () => {
       filteredBoard.unshift(Array.from({ length: BOARD_WIDTH }, () => null));
     }
 
-    // Update Stats
     if (clearedLinesCount > 0) {
       soundManager.playLineClear(clearedLinesCount);
       if (clearedLinesCount === 4) {
-        // Tetris Confetti!
         confetti({
           particleCount: 80,
           spread: 70,
@@ -114,12 +170,13 @@ export const useTetris = () => {
         const newLines = prev.lines + clearedLinesCount;
         const newCombo = prev.combo + 1;
         const addedScore = calculateScore(clearedLinesCount, prev.level, newCombo);
-        const newLevel = Math.floor(newLines / 10) + 1;
+        const newScore = prev.score + addedScore;
+        const newLevel = calculateLevel(newScore, newLines); // Dynamic level every 10,000 pts
 
         return {
           ...prev,
           lines: newLines,
-          score: prev.score + addedScore,
+          score: newScore,
           combo: newCombo,
           level: newLevel,
         };
@@ -130,7 +187,6 @@ export const useTetris = () => {
 
     setBoard(filteredBoard);
 
-    // Spawn next piece from queue
     setNextQueue((prevQueue) => {
       const queueCopy = [...prevQueue];
       const nextType = queueCopy.shift() || bagRef.current.next();
@@ -140,7 +196,6 @@ export const useTetris = () => {
 
       const nextPiece = createPiece(nextType);
 
-      // Check Game Over
       if (checkCollision(nextPiece, filteredBoard)) {
         soundManager.playGameOver();
         setGameState('GAMEOVER');
@@ -186,7 +241,11 @@ export const useTetris = () => {
     if (!checkCollision(currentPiece, board, { x: 0, y: 1 })) {
       soundManager.playSoftDrop();
       setCurrentPiece((prev) => prev ? { ...prev, pos: { ...prev.pos, y: prev.pos.y + 1 } } : null);
-      setStats((prev) => ({ ...prev, score: prev.score + 1 }));
+      setStats((prev) => {
+        const newScore = prev.score + 1;
+        const newLevel = calculateLevel(newScore, prev.lines);
+        return { ...prev, score: newScore, level: newLevel };
+      });
     } else {
       lockPiece(currentPiece, board);
     }
@@ -198,7 +257,11 @@ export const useTetris = () => {
     const dropDistance = ghost.pos.y - currentPiece.pos.y;
 
     soundManager.playHardDrop();
-    setStats((prev) => ({ ...prev, score: prev.score + dropDistance * 2 }));
+    setStats((prev) => {
+      const newScore = prev.score + dropDistance * 2;
+      const newLevel = calculateLevel(newScore, prev.lines);
+      return { ...prev, score: newScore, level: newLevel };
+    });
     lockPiece(ghost, board);
   }, [gameState, currentPiece, board, lockPiece]);
 
@@ -209,7 +272,6 @@ export const useTetris = () => {
     const currentType = currentPiece.type;
 
     if (holdPieceType === null) {
-      // First hold
       setHoldPieceType(currentType);
       setNextQueue((prevQueue) => {
         const queueCopy = [...prevQueue];
@@ -221,7 +283,6 @@ export const useTetris = () => {
         return queueCopy;
       });
     } else {
-      // Swap hold
       const newCurrentPiece = createPiece(holdPieceType);
       setHoldPieceType(currentType);
       setCurrentPiece(newCurrentPiece);
@@ -230,7 +291,6 @@ export const useTetris = () => {
     setCanHold(false);
   }, [gameState, currentPiece, canHold, holdPieceType]);
 
-  // Start new game
   const startGame = useCallback(() => {
     bagRef.current = new BagRandomizer();
 
@@ -248,14 +308,13 @@ export const useTetris = () => {
     setCanHold(true);
     setGameState('PLAYING');
 
-    const savedHighScore = localStorage.getItem(HIGH_SCORE_KEY);
-    setStats({
+    setStats((prev) => ({
+      ...prev,
       score: 0,
-      highScore: savedHighScore ? parseInt(savedHighScore, 10) : 0,
       level: 1,
       lines: 0,
       combo: -1,
-    });
+    }));
   }, []);
 
   const togglePause = useCallback(() => {
@@ -266,7 +325,7 @@ export const useTetris = () => {
     });
   }, []);
 
-  // Main game tick loop
+  // Main game tick loop with speed scaling per level
   useEffect(() => {
     if (gameState !== 'PLAYING') return;
 
@@ -316,5 +375,6 @@ export const useTetris = () => {
     softDrop,
     hardDrop,
     hold,
+    submitHighScore,
   };
 };

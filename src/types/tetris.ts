@@ -1,6 +1,6 @@
 export type TetrominoType = 'I' | 'J' | 'L' | 'O' | 'S' | 'T' | 'Z';
 
-export type RotationState = 0 | 1 | 2 | 3; // 0: 0deg, 1: 90deg, 2: 180deg, 3: 270deg
+export type RotationState = 0 | 1 | 2 | 3;
 
 export interface Position {
   x: number;
@@ -26,12 +26,20 @@ export type BoardGrid = GridCell[][];
 
 export type GameState = 'IDLE' | 'PLAYING' | 'PAUSED' | 'GAMEOVER';
 
+export interface LeaderboardEntry {
+  nickname: string;
+  score: number;
+  date: string;
+}
+
 export interface GameStats {
   score: number;
   highScore: number;
+  highScoreNickname: string;
   level: number;
   lines: number;
   combo: number;
+  topScores?: LeaderboardEntry[];
 }
 
 export interface AudioSettings {

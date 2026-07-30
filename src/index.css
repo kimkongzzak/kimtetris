@@ -566,6 +566,133 @@ body {
   animation: pulse 1s infinite alternate;
 }
 
+/* Nickname Submission Card in GameOver Modal */
+.nickname-form-card {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px dashed var(--border-neon);
+  border-radius: 10px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+[data-theme='excel'] .nickname-form-card {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+
+.nickname-title {
+  font-size: 0.8rem;
+  color: var(--primary-cyan);
+  margin-bottom: 0.5rem;
+  font-family: var(--font-orbitron);
+}
+
+[data-theme='excel'] .nickname-title {
+  color: #107c41 !important;
+  font-family: var(--font-sans) !important;
+}
+
+.nickname-input-group {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.nickname-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-neon);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  color: var(--text-main);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+[data-theme='excel'] .nickname-input {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #1f1f1f !important;
+}
+
+.submit-nick-btn {
+  background: var(--primary-cyan);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+}
+
+[data-theme='excel'] .submit-nick-btn {
+  background: #107c41 !important;
+  color: #ffffff !important;
+}
+
+.submitted-msg {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: #22c55e;
+}
+
+.leaderboard-preview {
+  margin-top: 0.5rem;
+}
+
+.leaderboard-preview h5 {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.4rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+[data-theme='excel'] .leaderboard-item {
+  background: #f1f5f9 !important;
+  color: #334155 !important;
+}
+
+.leaderboard-item .rank {
+  font-weight: bold;
+  color: var(--accent-yellow);
+}
+
+[data-theme='excel'] .leaderboard-item .rank {
+  color: #107c41 !important;
+}
+
+.leaderboard-item .name {
+  flex: 1;
+  margin-left: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.leaderboard-item .score {
+  font-family: var(--font-orbitron);
+  font-weight: bold;
+}
+
 @keyframes pulse {
   0% { transform: scale(0.98); opacity: 0.9; }
   100% { transform: scale(1.04); opacity: 1; box-shadow: 0 0 10px rgba(249, 115, 22, 0.8); }
