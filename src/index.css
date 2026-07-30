@@ -30,6 +30,17 @@
   --text-muted: #475569;
 }
 
+[data-theme='excel'] {
+  --bg-dark: #f3f2f1;
+  --bg-gradient: none;
+  --bg-card-rgb: 255, 255, 255;
+  --border-neon: #107c41;
+  --primary-cyan: #107c41;
+  --primary-glow: rgba(16, 124, 65, 0.3);
+  --text-main: #1f1f1f;
+  --text-muted: #616161;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -89,6 +100,121 @@ body {
   opacity: var(--card-opacity);
   transition: background-color 0.15s ease, opacity 0.15s ease;
   flex-shrink: 0;
+}
+
+/* Excel Camouflage Ribbon Header */
+[data-theme='excel'] .header-bar {
+  background: #107c41 !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  border: none !important;
+}
+
+[data-theme='excel'] .game-title {
+  color: #ffffff !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.95rem !important;
+  text-shadow: none !important;
+  background: none !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+[data-theme='excel'] .icon-btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+}
+
+[data-theme='excel'] .opacity-control-group {
+  background: rgba(0, 0, 0, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+[data-theme='excel'] .opacity-control-group label {
+  color: #ffffff !important;
+}
+
+/* Excel Formula Bar */
+.excel-formula-bar {
+  display: none;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0.2rem 0.6rem;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: #334155;
+  margin-top: 0.3rem;
+  flex-shrink: 0;
+}
+
+[data-theme='excel'] .excel-formula-bar {
+  display: flex;
+}
+
+.fx-label {
+  font-weight: bold;
+  color: #107c41;
+  font-style: italic;
+}
+
+.fx-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Excel Grid Wrapper for Canvas */
+.excel-board-wrapper {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.excel-col-headers {
+  display: flex;
+  background: #f1f5f9;
+  border-bottom: 1px solid #cbd5e1;
+  font-size: 0.6rem;
+  font-weight: bold;
+  color: #64748b;
+  text-align: center;
+}
+
+.excel-col-cell {
+  flex: 1;
+  border-right: 1px solid #cbd5e1;
+  padding: 0.1rem 0;
+}
+
+.excel-board-body {
+  display: flex;
+}
+
+.excel-row-headers {
+  display: flex;
+  flex-direction: column;
+  background: #f1f5f9;
+  border-right: 1px solid #cbd5e1;
+  font-size: 0.55rem;
+  font-weight: bold;
+  color: #64748b;
+  width: 16px;
+}
+
+.excel-row-cell {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .logo-group {
@@ -263,8 +389,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  max-height: calc(100vh - 100px);
-  max-height: calc(100dvh - 100px);
+  max-height: calc(100vh - 120px);
+  max-height: calc(100dvh - 120px);
   aspect-ratio: 1 / 2;
   transition: background-color 0.15s ease, border-color 0.3s ease;
 }
@@ -640,7 +766,7 @@ body {
   }
 
   .icon-btn span, .opacity-control-group label span {
-    display: none; /* Icon-only in header for mobile to avoid overflow */
+    display: none;
   }
 
   .opacity-slider {
@@ -655,7 +781,7 @@ body {
   }
 
   .side-column {
-    width: 82px; /* Fixed compact width for left & right panels */
+    width: 82px;
     height: 100%;
     flex-direction: column;
     justify-content: center;
@@ -697,13 +823,13 @@ body {
   }
 
   .center-board {
-    max-height: calc(100vh - 170px);
-    max-height: calc(100dvh - 170px);
+    max-height: calc(100vh - 180px);
+    max-height: calc(100dvh - 180px);
   }
 
   .canvas-container {
-    max-height: calc(100vh - 170px);
-    max-height: calc(100dvh - 170px);
+    max-height: calc(100vh - 180px);
+    max-height: calc(100dvh - 180px);
     border-radius: 8px;
   }
 

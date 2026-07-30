@@ -19,6 +19,7 @@ import {
   Moon,
   EyeOff,
   FileText,
+  FileSpreadsheet,
 } from 'lucide-react';
 
 export function App() {
@@ -45,7 +46,7 @@ export function App() {
 
   const [isControlsModalOpen, setIsControlsModalOpen] = useState(false);
   const [cardOpacity, setCardOpacity] = useState(85);
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [theme, setTheme] = useState<'dark' | 'light' | 'excel'>('dark');
   const [isStealthMode, setIsStealthMode] = useState(false);
 
   // Update CSS custom variable for opacity in real-time
@@ -58,15 +59,19 @@ export function App() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  const cycleTheme = () => {
+    setTheme((prev) => {
+      if (prev === 'dark') return 'light';
+      if (prev === 'light') return 'excel';
+      return 'dark';
+    });
   };
 
   const toggleStealth = () => {
     setIsStealthMode((prev) => {
       const next = !prev;
       if (next && gameState === 'PLAYING') {
-        togglePause(); // Auto-pause game on stealth mode
+        togglePause();
       }
       return next;
     });
@@ -205,8 +210,14 @@ export function App() {
       {/* Fixed Top Header Navigation */}
       <header className="header-bar">
         <div className="logo-group">
-          <Gamepad2 size={26} className="text-cyan-400" />
-          <h1 className="game-title">CYBER TETRIS</h1>
+          {theme === 'excel' ? (
+            <FileSpreadsheet size={22} className="text-white" />
+          ) : (
+            <Gamepad2 size={24} className="text-cyan-400" />
+          )}
+          <h1 className="game-title">
+            {theme === 'excel' ? 'Microsoft Excel - 2026_실적분석.xlsx' : 'CYBER TETRIS'}
+          </h1>
         </div>
 
         <div className="header-actions">
@@ -234,18 +245,21 @@ export function App() {
             onClick={toggleStealth}
             title="몰컴 모드 (단축키: B) - 보고서 위장 화면"
           >
-            <EyeOff size={18} />
+            <EyeOff size={16} />
             <span>몰컴(B)</span>
           </button>
 
-          {/* Dark / Light Mode Toggle Button */}
-          <button className="icon-btn" onClick={toggleTheme} title="테마 전환 (다크/라이트)">
-            {theme === 'dark' ? <Sun size={18} className="text-yellow-400" /> : <Moon size={18} className="text-blue-500" />}
+          {/* Theme Toggle Button (Dark -> Light -> Excel) */}
+          <button className="icon-btn" onClick={cycleTheme} title="테마 전환 (네온/라이트/엑셀)">
+            {theme === 'dark' && <Sun size={16} className="text-yellow-400" />}
+            {theme === 'light' && <Moon size={16} className="text-blue-500" />}
+            {theme === 'excel' && <FileSpreadsheet size={16} className="text-emerald-400" />}
+            <span>{theme === 'dark' ? '다크' : theme === 'light' ? '라이트' : '엑셀'}</span>
           </button>
 
           {/* Sound Toggle Button */}
           <button className="icon-btn" onClick={toggleSound} title="사운드 온/오프">
-            {soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
+            {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
           </button>
 
           {/* Controls Guide Button */}
@@ -254,11 +268,19 @@ export function App() {
             onClick={() => setIsControlsModalOpen(true)}
             title="조작법"
           >
-            <HelpCircle size={18} />
+            <HelpCircle size={16} />
             <span>조작법</span>
           </button>
         </div>
       </header>
+
+      {/* Excel Mode Formula Bar */}
+      <div className="excel-formula-bar">
+        <span className="fx-label">fx</span>
+        <span className="fx-text">
+          =SUM(SCORE: {stats.score}, LEVEL: {stats.level}, LINES: {stats.lines}, HIGH: {stats.highScore})
+        </span>
+      </div>
 
       {/* Main Game Section */}
       <main className="game-layout">
@@ -274,18 +296,18 @@ export function App() {
             <h3 className="panel-title">MENU</h3>
             {gameState === 'IDLE' ? (
               <button className="neon-button primary-btn" onClick={startGame}>
-                <Play size={18} /> 시작하기
+                <Play size={16} /> 시작하기
               </button>
             ) : gameState === 'PLAYING' || gameState === 'PAUSED' ? (
-              <div className="menu-btn-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <div className="menu-btn-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                 <button className="neon-button" onClick={togglePause}>
                   {gameState === 'PAUSED' ? (
                     <>
-                      <Play size={18} /> 재개
+                      <Play size={16} /> 재개
                     </>
                   ) : (
                     <>
-                      <Pause size={18} /> 일시정지
+                      <Pause size={16} /> 일시정지
                     </>
                   )}
                 </button>
@@ -294,12 +316,12 @@ export function App() {
                   onClick={startGame}
                   style={{ justifyContent: 'center' }}
                 >
-                  <RotateCcw size={16} /> 재시작
+                  <RotateCcw size={14} /> 재시작
                 </button>
               </div>
             ) : (
               <button className="neon-button primary-btn" onClick={startGame}>
-                <RotateCcw size={18} /> 다시 시작
+                <RotateCcw size={16} /> 다시 시작
               </button>
             )}
           </div>
@@ -307,12 +329,36 @@ export function App() {
 
         {/* Center: Main Canvas Grid */}
         <div className="center-board">
-          <TetrisBoard
-            board={board}
-            currentPiece={currentPiece}
-            ghostPiece={ghostPiece}
-            opacity={cardOpacity / 100}
-          />
+          {theme === 'excel' ? (
+            <div className="excel-board-wrapper">
+              <div className="excel-col-headers">
+                <div style={{ width: '16px' }}></div>
+                {['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].map((col) => (
+                  <div key={col} className="excel-col-cell">{col}</div>
+                ))}
+              </div>
+              <div className="excel-board-body">
+                <div className="excel-row-headers">
+                  {Array.from({ length: 20 }, (_, i) => (
+                    <div key={i} className="excel-row-cell">{i + 1}</div>
+                  ))}
+                </div>
+                <TetrisBoard
+                  board={board}
+                  currentPiece={currentPiece}
+                  ghostPiece={ghostPiece}
+                  opacity={cardOpacity / 100}
+                />
+              </div>
+            </div>
+          ) : (
+            <TetrisBoard
+              board={board}
+              currentPiece={currentPiece}
+              ghostPiece={ghostPiece}
+              opacity={cardOpacity / 100}
+            />
+          )}
         </div>
 
         {/* Right Side Column: Next Piece Queue & Scoreboard */}
