@@ -25,6 +25,9 @@ import { soundManager } from '../utils/audio';
 const HIGH_SCORE_KEY = 'CYBER_TETRIS_HIGH_SCORE';
 const HIGH_SCORE_NICK_KEY = 'CYBER_TETRIS_HIGH_SCORE_NICK';
 
+const LOCK_DELAY_MS = 500; // 500ms lock delay before hard locking to floor
+const MAX_LOCK_RESETS = 15; // Max 15 moves on floor before locking
+
 export const useTetris = () => {
   const [board, setBoard] = useState<BoardGrid>(createEmptyBoard());
   const [currentPiece, setCurrentPiece] = useState<Piece | null>(null);
@@ -54,6 +57,10 @@ export const useTetris = () => {
   const gameLoopRef = useRef<number | null>(null);
   const lastTickRef = useRef<number>(0);
 
+  // Lock Delay refs
+  const lockDelayTimerRef = useRef<number | null>(null);
+  const lockResetCountRef = useRef<number>(0);
+
   // Fetch Server High Score & Leaderboard on Initial Load
   useEffect(() => {
     const fetchServerHighScore = async () => {
@@ -79,6 +86,14 @@ export const useTetris = () => {
     };
 
     fetchServerHighScore();
+  }, []);
+
+  // Clear Lock Delay Helper
+  const clearLockDelay = useCallback(() => {
+    if (lockDelayTimerRef.current !== null) {
+      clearTimeout(lockDelayTimerRef.current);
+      lockDelayTimerRef.current = null;
+    }
   }, []);
 
   // Window Focus Out / Visibility Change -> Auto Pause
@@ -147,6 +162,9 @@ export const useTetris = () => {
 
   // Lock current piece & check line clears
   const lockPiece = useCallback((pieceToLock: Piece, currentBoard: BoardGrid) => {
+    clearLockDelay();
+    lockResetCountRef.current = 0;
+
     const newBoard = currentBoard.map((row) => [...row]);
 
     for (let y = 0; y < pieceToLock.shape.length; y++) {
@@ -228,30 +246,41 @@ export const useTetris = () => {
     });
 
     setCanHold(true);
-  }, []);
+  }, [clearLockDelay]);
 
-  // End Game (GIVE UP) button action -> triggers GameOver & High Score check
-  const endGame = useCallback(() => {
-    soundManager.playGameOver();
-    setGameState('GAMEOVER');
-  }, []);
+  // Refresh Lock Delay on valid movement/rotation near bottom
+  const refreshLockDelayIfGrounded = useCallback((pieceCandidate: Piece) => {
+    if (checkCollision(pieceCandidate, board, { x: 0, y: 1 })) {
+      if (lockResetCountRef.current < MAX_LOCK_RESETS) {
+        clearLockDelay();
+        lockResetCountRef.current++;
+        lockDelayTimerRef.current = window.setTimeout(() => {
+          lockPiece(pieceCandidate, board);
+        }, LOCK_DELAY_MS);
+      }
+    }
+  }, [board, clearLockDelay, lockPiece]);
 
-  // Movement handlers
+  // Movement handlers with Lock Delay refresh
   const moveLeft = useCallback(() => {
     if (gameState !== 'PLAYING' || !currentPiece) return;
     if (!checkCollision(currentPiece, board, { x: -1, y: 0 })) {
       soundManager.playMove();
-      setCurrentPiece((prev) => prev ? { ...prev, pos: { ...prev.pos, x: prev.pos.x - 1 } } : null);
+      const updated = { ...currentPiece, pos: { ...currentPiece.pos, x: currentPiece.pos.x - 1 } };
+      setCurrentPiece(updated);
+      refreshLockDelayIfGrounded(updated);
     }
-  }, [gameState, currentPiece, board]);
+  }, [gameState, currentPiece, board, refreshLockDelayIfGrounded]);
 
   const moveRight = useCallback(() => {
     if (gameState !== 'PLAYING' || !currentPiece) return;
     if (!checkCollision(currentPiece, board, { x: 1, y: 0 })) {
       soundManager.playMove();
-      setCurrentPiece((prev) => prev ? { ...prev, pos: { ...prev.pos, x: prev.pos.x + 1 } } : null);
+      const updated = { ...currentPiece, pos: { ...currentPiece.pos, x: currentPiece.pos.x + 1 } };
+      setCurrentPiece(updated);
+      refreshLockDelayIfGrounded(updated);
     }
-  }, [gameState, currentPiece, board]);
+  }, [gameState, currentPiece, board, refreshLockDelayIfGrounded]);
 
   const rotate = useCallback((clockwise: boolean = true) => {
     if (gameState !== 'PLAYING' || !currentPiece) return;
@@ -259,8 +288,25 @@ export const useTetris = () => {
     if (rotated) {
       soundManager.playRotate();
       setCurrentPiece(rotated);
+      refreshLockDelayIfGrounded(rotated);
     }
-  }, [gameState, currentPiece, board]);
+  }, [gameState, currentPiece, board, refreshLockDelayIfGrounded]);
+
+  // Dedicated T-Spin Action
+  const tSpin = useCallback(() => {
+    if (gameState !== 'PLAYING' || !currentPiece) return;
+    const rotated = getRotatedPiece(currentPiece, board, true);
+    if (rotated) {
+      soundManager.playRotate();
+      setCurrentPiece(rotated);
+      refreshLockDelayIfGrounded(rotated);
+
+      if (currentPiece.type === 'T') {
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+        setStats((prev) => ({ ...prev, score: prev.score + 400 * prev.level }));
+      }
+    }
+  }, [gameState, currentPiece, board, refreshLockDelayIfGrounded]);
 
   const softDrop = useCallback(() => {
     if (gameState !== 'PLAYING' || !currentPiece) return;
@@ -279,6 +325,7 @@ export const useTetris = () => {
 
   const hardDrop = useCallback(() => {
     if (gameState !== 'PLAYING' || !currentPiece) return;
+    clearLockDelay();
     const ghost = getGhostPiece(currentPiece, board);
     const dropDistance = ghost.pos.y - currentPiece.pos.y;
 
@@ -289,11 +336,11 @@ export const useTetris = () => {
       return { ...prev, score: newScore, level: newLevel };
     });
     lockPiece(ghost, board);
-  }, [gameState, currentPiece, board, lockPiece]);
+  }, [gameState, currentPiece, board, lockPiece, clearLockDelay]);
 
   const hold = useCallback(() => {
     if (gameState !== 'PLAYING' || !currentPiece || !canHold) return;
-
+    clearLockDelay();
     soundManager.playHold();
     const currentType = currentPiece.type;
 
@@ -315,9 +362,10 @@ export const useTetris = () => {
     }
 
     setCanHold(false);
-  }, [gameState, currentPiece, canHold, holdPieceType]);
+  }, [gameState, currentPiece, canHold, holdPieceType, clearLockDelay]);
 
   const startGame = useCallback(() => {
+    clearLockDelay();
     bagRef.current = new BagRandomizer();
 
     const initialQueue: TetrominoType[] = [
@@ -341,7 +389,7 @@ export const useTetris = () => {
       lines: 0,
       combo: -1,
     }));
-  }, []);
+  }, [clearLockDelay]);
 
   const togglePause = useCallback(() => {
     setGameState((prev) => {
@@ -351,7 +399,13 @@ export const useTetris = () => {
     });
   }, []);
 
-  // Main game tick loop with speed scaling per level
+  const endGame = useCallback(() => {
+    clearLockDelay();
+    soundManager.playGameOver();
+    setGameState('GAMEOVER');
+  }, [clearLockDelay]);
+
+  // Main game tick loop with 500ms Lock Delay when grounded
   useEffect(() => {
     if (gameState !== 'PLAYING') return;
 
@@ -365,9 +419,15 @@ export const useTetris = () => {
         lastTickRef.current = time;
         if (currentPiece) {
           if (!checkCollision(currentPiece, board, { x: 0, y: 1 })) {
+            clearLockDelay();
             setCurrentPiece((prev) => prev ? { ...prev, pos: { ...prev.pos, y: prev.pos.y + 1 } } : null);
           } else {
-            lockPiece(currentPiece, board);
+            // Touched bottom: Start 500ms lock delay if not already active
+            if (lockDelayTimerRef.current === null) {
+              lockDelayTimerRef.current = window.setTimeout(() => {
+                lockPiece(currentPiece, board);
+              }, LOCK_DELAY_MS);
+            }
           }
         }
       }
@@ -380,7 +440,7 @@ export const useTetris = () => {
     return () => {
       if (gameLoopRef.current) cancelAnimationFrame(gameLoopRef.current);
     };
-  }, [gameState, currentPiece, board, stats.level, lockPiece]);
+  }, [gameState, currentPiece, board, stats.level, lockPiece, clearLockDelay]);
 
   return {
     board,
@@ -399,6 +459,7 @@ export const useTetris = () => {
     moveLeft,
     moveRight,
     rotate,
+    tSpin,
     softDrop,
     hardDrop,
     hold,

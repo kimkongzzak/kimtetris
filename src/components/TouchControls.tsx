@@ -6,12 +6,14 @@ import {
   RotateCw,
   Zap,
   Shield,
+  RefreshCw,
 } from 'lucide-react';
 
 interface TouchControlsProps {
   onMoveLeft: () => void;
   onMoveRight: () => void;
   onRotate: () => void;
+  onTSpin: () => void;
   onSoftDrop: () => void;
   onHardDrop: () => void;
   onHold: () => void;
@@ -22,6 +24,7 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
   onMoveLeft,
   onMoveRight,
   onRotate,
+  onTSpin,
   onSoftDrop,
   onHardDrop,
   onHold,
@@ -45,23 +48,32 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
 
   return (
     <div className="touch-controls-container">
-      {/* Left Cluster: Top HOLD, Bottom HARD DROP */}
+      {/* Left Cluster: Top HOLD, Middle T-SPIN, Bottom HARD DROP */}
       <div className="touch-group-left">
         <button
           className="touch-btn action-btn hold-btn"
           onPointerDown={(e) => handlePointerDown(e, onHold)}
           disabled={disabled}
         >
-          <Shield size={14} />
+          <Shield size={13} />
           <span>HOLD</span>
         </button>
 
         <button
-          className="touch-btn action-btn hard-drop-btn"
+          className="touch-btn action-btn tspin-btn"
+          onPointerDown={(e) => handlePointerDown(e, onTSpin)}
+          disabled={disabled}
+        >
+          <RefreshCw size={13} className="text-purple-400" />
+          <span>T-SPIN</span>
+        </button>
+
+        <button
+          className="touch-btn action-btn hard-drop-btn vibrant-hard-drop"
           onPointerDown={(e) => handlePointerDown(e, onHardDrop)}
           disabled={disabled}
         >
-          <Zap size={14} color="#eab308" />
+          <Zap size={14} color="#ffffff" />
           <span>HARD DROP</span>
         </button>
       </div>
@@ -75,7 +87,7 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
             onPointerDown={(e) => handlePointerDown(e, onRotate)}
             disabled={disabled}
           >
-            <RotateCw size={16} />
+            <RotateCw size={15} />
             <span>회전 🔁</span>
           </button>
         </div>

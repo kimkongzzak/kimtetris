@@ -45,6 +45,7 @@ export function App() {
     moveLeft,
     moveRight,
     rotate,
+    tSpin,
     softDrop,
     hardDrop,
     hold,
@@ -83,7 +84,6 @@ export function App() {
   // Keyboard Event Listeners (including Boss Key 'B' & ESC for Pause)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Boss Key 'B' or 'b' toggles Stealth Mode instantly
       if (e.key === 'b' || e.key === 'B') {
         e.preventDefault();
         toggleStealth();
@@ -92,7 +92,6 @@ export function App() {
 
       if (isStealthMode) return;
 
-      // ESC Key Listener for Pause / Resume / Modal Close
       if (e.key === 'Escape' || e.key === 'Esc') {
         e.preventDefault();
         if (isControlsModalOpen) {
@@ -109,7 +108,6 @@ export function App() {
         }
       }
 
-      // Prevent default page scroll on game controls
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
         e.preventDefault();
       }
@@ -332,7 +330,6 @@ export function App() {
               </button>
             ) : gameState === 'PLAYING' || gameState === 'PAUSED' ? (
               <div className="menu-btn-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                {/* Big prominent Pause Button */}
                 <button className="neon-button pause-big-btn" onClick={togglePause}>
                   {gameState === 'PAUSED' ? (
                     <>
@@ -345,7 +342,6 @@ export function App() {
                   )}
                 </button>
 
-                {/* Restart Button */}
                 <button
                   className="icon-btn"
                   onClick={startGame}
@@ -354,7 +350,6 @@ export function App() {
                   <RotateCcw size={14} /> 재시작
                 </button>
 
-                {/* Small End Game Button at the bottom */}
                 <button
                   className="end-game-btn small-end-btn"
                   onClick={endGame}
@@ -430,7 +425,8 @@ export function App() {
       <TouchControls
         onMoveLeft={moveLeft}
         onMoveRight={moveRight}
-        onRotate={() => rotate(true)}
+        onRotate={rotate}
+        onTSpin={tSpin}
         onSoftDrop={softDrop}
         onHardDrop={hardDrop}
         onHold={hold}
