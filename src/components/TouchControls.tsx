@@ -5,7 +5,7 @@ import {
   ArrowDown,
   RotateCw,
   Zap,
-  Bookmark,
+  Shield,
 } from 'lucide-react';
 
 interface TouchControlsProps {
@@ -28,17 +28,15 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
   disabled = false,
 }) => {
   const triggerHaptic = () => {
-    if ('vibrate' in navigator) {
-      try {
-        navigator.vibrate(12);
-      } catch {
-        // Haptics fallback
-      }
+    if (navigator.vibrate) {
+      navigator.vibrate(10);
     }
   };
 
-  // Modern pointer down handler preventing synthetic double-click events
-  const handlePointerDown = (action: () => void) => (e: React.PointerEvent) => {
+  const handlePointerDown = (
+    e: React.PointerEvent<HTMLButtonElement>,
+    action: () => void
+  ) => {
     e.preventDefault();
     if (disabled) return;
     triggerHaptic();
@@ -47,61 +45,65 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
 
   return (
     <div className="touch-controls-container">
-      {/* Action Buttons Top Bar (Hold, Hard Drop, Rotate) */}
-      <div className="touch-actions-row">
+      {/* Left Cluster: Top HOLD, Bottom HARD DROP */}
+      <div className="touch-group-left">
         <button
           className="touch-btn action-btn hold-btn"
-          onPointerDown={handlePointerDown(onHold)}
-          aria-label="Hold"
+          onPointerDown={(e) => handlePointerDown(e, onHold)}
+          disabled={disabled}
         >
-          <Bookmark size={18} />
+          <Shield size={14} />
           <span>HOLD</span>
         </button>
 
         <button
           className="touch-btn action-btn hard-drop-btn"
-          onPointerDown={handlePointerDown(onHardDrop)}
-          aria-label="Hard Drop"
+          onPointerDown={(e) => handlePointerDown(e, onHardDrop)}
+          disabled={disabled}
         >
-          <Zap size={20} />
-          <span>DROP</span>
-        </button>
-
-        <button
-          className="touch-btn action-btn rotate-btn"
-          onPointerDown={handlePointerDown(onRotate)}
-          aria-label="Rotate"
-        >
-          <RotateCw size={20} />
-          <span>ROTATE</span>
+          <Zap size={14} color="#eab308" />
+          <span>HARD DROP</span>
         </button>
       </div>
 
-      {/* D-Pad Buttons Bottom Row (Left, Down, Right) */}
-      <div className="touch-dpad-row">
-        <button
-          className="touch-btn dpad-btn"
-          onPointerDown={handlePointerDown(onMoveLeft)}
-          aria-label="Move Left"
-        >
-          <ArrowLeft size={24} />
-        </button>
+      {/* Right Cluster: Keypad format */}
+      <div className="touch-group-right">
+        {/* Top Row: Rotate Button 🔁 */}
+        <div className="touch-row-top">
+          <button
+            className="touch-btn rotate-top-btn"
+            onPointerDown={(e) => handlePointerDown(e, onRotate)}
+            disabled={disabled}
+          >
+            <RotateCw size={16} />
+            <span>회전 🔁</span>
+          </button>
+        </div>
 
-        <button
-          className="touch-btn dpad-btn"
-          onPointerDown={handlePointerDown(onSoftDrop)}
-          aria-label="Soft Drop"
-        >
-          <ArrowDown size={24} />
-        </button>
-
-        <button
-          className="touch-btn dpad-btn"
-          onPointerDown={handlePointerDown(onMoveRight)}
-          aria-label="Move Right"
-        >
-          <ArrowRight size={24} />
-        </button>
+        {/* Bottom Row: ◀️ Down ▶️ */}
+        <div className="touch-row-bottom">
+          <button
+            className="touch-btn dpad-btn"
+            onPointerDown={(e) => handlePointerDown(e, onMoveLeft)}
+            disabled={disabled}
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <button
+            className="touch-btn dpad-btn"
+            onPointerDown={(e) => handlePointerDown(e, onSoftDrop)}
+            disabled={disabled}
+          >
+            <ArrowDown size={18} />
+          </button>
+          <button
+            className="touch-btn dpad-btn"
+            onPointerDown={(e) => handlePointerDown(e, onMoveRight)}
+            disabled={disabled}
+          >
+            <ArrowRight size={18} />
+          </button>
+        </div>
       </div>
     </div>
   );
