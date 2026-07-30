@@ -493,23 +493,36 @@ body {
   object-fit: contain;
 }
 
-/* Mini Preview Components */
-.mini-grid {
+/* Perfectly Proportioned 4x4 Mini Preview Grid (Fix Distortion & Skew) */
+.mini-grid-4x4 {
   display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
   gap: 2px;
+  width: 52px;
+  height: 52px;
   justify-content: center;
-  margin: 0.2rem 0;
+  align-items: center;
+  margin: 0 auto;
 }
 
 .mini-cell {
-  width: 14px;
-  height: 14px;
+  width: 100%;
+  height: 100%;
   border-radius: 2px;
+  background-color: transparent;
+}
+
+.mini-cell.empty {
   background-color: transparent;
 }
 
 .mini-cell.filled {
   border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+[data-theme='excel'] .mini-cell.filled {
+  border: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .queue-list {
@@ -987,6 +1000,12 @@ body {
     display: none;
   }
 
+  .mini-grid-4x4 {
+    width: 42px;
+    height: 42px;
+    gap: 1.5px;
+  }
+
   .game-layout {
     flex-direction: row;
     gap: 0.35rem;
@@ -1010,11 +1029,6 @@ body {
   .panel-title {
     font-size: 0.58rem;
     margin-bottom: 0.2rem;
-  }
-
-  .mini-cell {
-    width: 10px;
-    height: 10px;
   }
 
   .stat-group {

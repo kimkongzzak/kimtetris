@@ -35,8 +35,8 @@ export const TETROMINOES: Record<TetrominoType, {
         [0, 1, 0, 0],
       ],
     ],
-    color: '#00f0f0',
-    glowColor: 'rgba(0, 240, 240, 0.8)',
+    color: '#38bdf8', // Soft Sky Blue (눈 편한 하늘색)
+    glowColor: 'rgba(56, 189, 248, 0.7)',
   },
   J: {
     shapes: [
@@ -322,14 +322,12 @@ export const calculateScore = (linesCleared: number, level: number, combo: numbe
   return (baseScore * level) + comboBonus;
 };
 
-// Calculate dynamic level (rises every 10,000 points AND every 10 lines)
 export const calculateLevel = (score: number, lines: number): number => {
   const levelFromScore = Math.floor(score / 10000);
   const levelFromLines = Math.floor(lines / 10);
   return 1 + levelFromScore + levelFromLines;
 };
 
-// Calculate drop speed in ms based on level (Gradually speeds up progressively)
 export const getDropInterval = (level: number): number => {
   return Math.max(40, Math.floor(800 * Math.pow(0.88, level - 1)));
 };

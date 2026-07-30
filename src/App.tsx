@@ -285,6 +285,7 @@ export function App() {
             title="HOLD"
             pieceType={holdPieceType}
             disabled={!canHold}
+            blockOpacity={cardOpacity / 100}
           />
 
           <div className="glass-panel game-controls-panel">
@@ -360,7 +361,12 @@ export function App() {
 
         {/* Right Side Column: Next Piece Queue & Scoreboard */}
         <div className="side-column side-column-right">
-          <PiecePreview title="NEXT" pieceType={null} queue={nextQueue} />
+          <PiecePreview
+            title="NEXT"
+            pieceType={null}
+            queue={nextQueue}
+            blockOpacity={cardOpacity / 100}
+          />
           <ScoreBoard stats={stats} />
         </div>
       </main>
