@@ -876,8 +876,8 @@ body {
   max-width: 440px;
   margin: 0 auto;
   flex-direction: column;
-  gap: 0.35rem; /* Slightly tighter vertical spacing between button rows */
-  padding: 0.2rem 0.5rem 0.4rem;
+  gap: 5px; /* Clean ~4px-5px vertical gap between button rows */
+  padding: 0.3rem 0.5rem 0.5rem;
   flex-shrink: 0;
 }
 
@@ -892,8 +892,8 @@ body {
 }
 
 .hold-stepped-btn {
-  width: 110px;
-  height: 52px;
+  width: 118px !important;
+  height: 50px !important;
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.3)) !important;
   border: 2px solid #10b981 !important;
   color: #34d399 !important;
@@ -919,13 +919,13 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin: 0.1rem 0 0.2rem;
+  margin: 0;
 }
 
 .dpad-center-group {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.4rem;
 }
 
 .touch-stealth-row.row-bot {
@@ -933,7 +933,7 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-top: 0.2rem;
+  margin-top: 5px;
 }
 
 .mini-hold-preview-badge {
@@ -944,8 +944,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -1843,8 +1843,8 @@ body {
     width: 100%;
     max-width: 320px;
     height: 100%;
-    max-height: calc(100vh - 295px);
-    max-height: calc(100dvh - 295px);
+    max-height: calc(100vh - 315px);
+    max-height: calc(100dvh - 315px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1853,15 +1853,15 @@ body {
   }
 
   .canvas-container {
-    max-height: calc(100vh - 295px);
-    max-height: calc(100dvh - 295px);
+    max-height: calc(100vh - 315px);
+    max-height: calc(100dvh - 315px);
     border-radius: 8px;
     aspect-ratio: 1 / 2;
   }
 
   .excel-board-wrapper {
-    max-height: calc(100vh - 295px);
-    max-height: calc(100dvh - 295px);
+    max-height: calc(100vh - 315px);
+    max-height: calc(100dvh - 315px);
     display: flex;
     flex-direction: column;
     align-items: center;
