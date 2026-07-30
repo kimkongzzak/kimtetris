@@ -870,8 +870,8 @@ body {
 }
 
 /* Touch Controls - Stepped Elevation Layout */
-.touch-controls-container.stepped-layout {
-  display: none !important; /* Strictly hide on desktop */
+.touch-controls-container {
+  display: none; /* Hide on desktop by default */
   width: 100%;
   max-width: 440px;
   margin: 0 auto;
@@ -1531,6 +1531,13 @@ body {
     border-radius: 8px;
   }
 
+  .touch-controls-container {
+    display: flex !important;
+  }
+}
+
+/* Touchscreen Devices (Smartphones & Tablets) */
+@media (pointer: coarse) {
   .touch-controls-container {
     display: flex !important;
   }
