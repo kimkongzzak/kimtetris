@@ -332,16 +332,34 @@ export function App() {
 
 
 
-      {/* Mobile Floating Play Button (IDLE State Only) */}
-      {gameState === 'IDLE' && (
+      {/* Mobile Floating Controls (Start when IDLE, Pause when PLAYING, Resume when PAUSED) */}
+      {gameState !== 'GAMEOVER' && (
         <div className="mobile-floating-left-controls">
-          <button
-            className="mobile-float-btn play-btn"
-            onClick={startGame}
-            title="게임 시작"
-          >
-            <Play size={24} color="#ffffff" />
-          </button>
+          {gameState === 'IDLE' ? (
+            <button
+              className="mobile-float-btn play-btn"
+              onClick={startGame}
+              title="게임 시작"
+            >
+              <Play size={24} color="#ffffff" />
+            </button>
+          ) : gameState === 'PLAYING' ? (
+            <button
+              className="mobile-float-btn pause-btn"
+              onClick={togglePause}
+              title="일시정지"
+            >
+              <Pause size={24} color="#ffffff" />
+            </button>
+          ) : gameState === 'PAUSED' ? (
+            <button
+              className="mobile-float-btn play-btn"
+              onClick={togglePause}
+              title="게임 재개"
+            >
+              <Play size={24} color="#ffffff" />
+            </button>
+          ) : null}
         </div>
       )}
 
