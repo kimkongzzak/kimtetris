@@ -24,9 +24,9 @@ function formatDateWithTime(dateInput?: string | Date): string {
 // In-memory fallback
 let globalRecord = {
   highScore: 10000,
-  nickname: 'CYBER_LEGEND',
+  nickname: '김박사',
   topScores: [
-    { nickname: 'CYBER_LEGEND', score: 10000, date: formatDateWithTime() }
+    { nickname: '김박사', score: 10000, date: formatDateWithTime() }
   ] as LeaderboardEntry[],
 };
 

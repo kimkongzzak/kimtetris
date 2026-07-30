@@ -23,8 +23,8 @@ import {
 import { soundManager } from '../utils/audio';
 import { getTopScoresFromDb, saveScoreToDb, isSupabaseConfigured, formatDateWithTime } from '../lib/supabase';
 
-const HIGH_SCORE_KEY = 'CYBER_TETRIS_HIGH_SCORE';
-const HIGH_SCORE_NICK_KEY = 'CYBER_TETRIS_HIGH_SCORE_NICK';
+const HIGH_SCORE_KEY = 'KIM_TETRIS_HIGH_SCORE';
+const HIGH_SCORE_NICK_KEY = 'KIM_TETRIS_HIGH_SCORE_NICK';
 
 const LOCK_DELAY_MS = 500; // 500ms lock delay before hard locking to floor
 const MAX_LOCK_RESETS = 15; // Max 15 moves on floor before locking
@@ -43,7 +43,7 @@ export const useTetris = () => {
     return {
       score: 0,
       highScore: savedHighScore ? parseInt(savedHighScore, 10) : 10000,
-      highScoreNickname: savedNick || 'CYBER_LEGEND',
+      highScoreNickname: savedNick || '김박사',
       level: 1,
       lines: 0,
       combo: -1,

@@ -23,7 +23,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
 
   // Determine #1 Champion (either from topScores[0] or fallback to current global record)
   const top1 = topScores.length > 0 ? topScores[0] : {
-    nickname: currentHighScoreNickname || 'CYBER_LEGEND',
+    nickname: currentHighScoreNickname || '김박사',
     score: currentHighScore,
     date: new Date().toISOString().slice(0, 16).replace('T', ' '),
   };

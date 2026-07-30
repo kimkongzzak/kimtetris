@@ -235,7 +235,7 @@ export function App() {
             <Gamepad2 size={24} className="text-cyan-400" />
           )}
           <h1 className="game-title">
-            {theme === 'excel' ? 'Microsoft Excel - 2026_실적분석.xlsx' : 'CYBER TETRIS'}
+            {theme === 'excel' ? 'Microsoft Excel - 2026_실적분석.xlsx' : '김박사의 테트리스'}
           </h1>
         </div>
 
