@@ -1860,7 +1860,7 @@ body {
 
   .center-board {
     width: 100%;
-    max-width: 320px;
+    max-width: 440px;
     height: 100%;
     max-height: calc(100vh - 220px);
     max-height: calc(100dvh - 220px);
