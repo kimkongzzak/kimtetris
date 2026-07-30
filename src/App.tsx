@@ -49,6 +49,7 @@ export function App() {
     hardDrop,
     hold,
     submitHighScore,
+    refreshLeaderboard,
   } = useTetris();
 
   const [isControlsModalOpen, setIsControlsModalOpen] = useState(false);
@@ -242,8 +243,11 @@ export function App() {
           {/* Global Leaderboard Button */}
           <button
             className="icon-btn rank-btn"
-            onClick={() => setIsLeaderboardModalOpen(true)}
-            title="전 세계 순위보기"
+            onClick={() => {
+              refreshLeaderboard();
+              setIsLeaderboardModalOpen(true);
+            }}
+            title="전 세계 순위보기 (실시간 DB 연동)"
           >
             <Trophy size={16} className="text-yellow-400" />
             <span>순위보기</span>
@@ -449,6 +453,7 @@ export function App() {
         topScores={stats.topScores || []}
         currentHighScore={stats.highScore}
         currentHighScoreNickname={stats.highScoreNickname}
+        onRefresh={refreshLeaderboard}
       />
 
       <PauseModal

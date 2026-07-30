@@ -21,7 +21,7 @@ import {
   getDropInterval,
 } from '../utils/tetris';
 import { soundManager } from '../utils/audio';
-import { getTopScoresFromDb, saveScoreToDb, isSupabaseConfigured } from '../lib/supabase';
+import { getTopScoresFromDb, saveScoreToDb, isSupabaseConfigured, formatDateWithTime } from '../lib/supabase';
 
 const HIGH_SCORE_KEY = 'CYBER_TETRIS_HIGH_SCORE';
 const HIGH_SCORE_NICK_KEY = 'CYBER_TETRIS_HIGH_SCORE_NICK';
@@ -62,50 +62,50 @@ export const useTetris = () => {
   const lockDelayTimerRef = useRef<number | null>(null);
   const lockResetCountRef = useRef<number>(0);
 
-  // Fetch Server High Score & Leaderboard on Initial Load
-  useEffect(() => {
-    const fetchServerHighScore = async () => {
-      if (isSupabaseConfigured) {
-        const dbScores = await getTopScoresFromDb(10);
-        if (dbScores.length > 0) {
-          const topScores = dbScores.map((item) => ({
-            nickname: item.nickname,
-            score: item.score,
-            date: item.created_at ? new Date(item.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-          }));
-          setStats((prev) => ({
-            ...prev,
-            highScore: Math.max(prev.highScore, topScores[0].score),
-            highScoreNickname: topScores[0].nickname || prev.highScoreNickname,
-            topScores,
-          }));
-          return;
+  // Fetch Server High Score & Leaderboard from Supabase DB or API
+  const refreshLeaderboard = useCallback(async () => {
+    if (isSupabaseConfigured) {
+      const dbScores = await getTopScoresFromDb(10);
+      if (dbScores.length > 0) {
+        const topScores = dbScores.map((item) => ({
+          nickname: item.nickname,
+          score: item.score,
+          date: formatDateWithTime(item.created_at),
+        }));
+        setStats((prev) => ({
+          ...prev,
+          highScore: Math.max(prev.highScore, topScores[0].score),
+          highScoreNickname: topScores[0].nickname || prev.highScoreNickname,
+          topScores,
+        }));
+        return;
+      }
+    }
+
+    try {
+      const res = await fetch('/api/highscore');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && typeof data.highScore === 'number') {
+          setStats((prev) => {
+            const bestScore = Math.max(prev.highScore, data.highScore);
+            return {
+              ...prev,
+              highScore: bestScore,
+              highScoreNickname: data.nickname || prev.highScoreNickname,
+              topScores: data.topScores || [],
+            };
+          });
         }
       }
-
-      try {
-        const res = await fetch('/api/highscore');
-        if (res.ok) {
-          const data = await res.json();
-          if (data && typeof data.highScore === 'number') {
-            setStats((prev) => {
-              const bestScore = Math.max(prev.highScore, data.highScore);
-              return {
-                ...prev,
-                highScore: bestScore,
-                highScoreNickname: data.nickname || prev.highScoreNickname,
-                topScores: data.topScores || [],
-              };
-            });
-          }
-        }
-      } catch {
-        // Fallback to local storage if offline
-      }
-    };
-
-    fetchServerHighScore();
+    } catch {
+      // Fallback to local storage if offline
+    }
   }, []);
+
+  useEffect(() => {
+    refreshLeaderboard();
+  }, [refreshLeaderboard]);
 
   // Clear Lock Delay Helper
   const clearLockDelay = useCallback(() => {
@@ -155,7 +155,7 @@ export const useTetris = () => {
         const topScores = updatedScores.map((item) => ({
           nickname: item.nickname,
           score: item.score,
-          date: item.created_at ? new Date(item.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          date: formatDateWithTime(item.created_at),
         }));
         setStats((prev) => ({
           ...prev,
@@ -501,5 +501,6 @@ export const useTetris = () => {
     hardDrop,
     hold,
     submitHighScore,
+    refreshLeaderboard,
   };
 };

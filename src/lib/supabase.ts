@@ -21,6 +21,23 @@ export const supabase = isSupabaseConfigured
   : null;
 
 /**
+ * Format date & time into YYYY-MM-DD HH:mm format
+ */
+export function formatDateWithTime(dateInput?: string | Date): string {
+  const d = dateInput ? new Date(dateInput) : new Date();
+  if (isNaN(d.getTime())) return String(dateInput);
+
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  const year = d.getFullYear();
+  const month = pad(d.getMonth() + 1);
+  const day = pad(d.getDate());
+  const hours = pad(d.getHours());
+  const minutes = pad(d.getMinutes());
+
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
+/**
  * Fetch Top High Scores from Supabase DB (Table: tetris_scores)
  */
 export async function getTopScoresFromDb(limit: number = 10): Promise<ScoreRecord[]> {

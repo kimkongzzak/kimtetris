@@ -1,6 +1,6 @@
 import React from 'react';
 import { LeaderboardEntry } from '../types/tetris';
-import { Crown, Trophy, X, Medal } from 'lucide-react';
+import { Crown, Trophy, X, Medal, RotateCcw } from 'lucide-react';
 
 interface LeaderboardModalProps {
   isOpen: boolean;
@@ -8,6 +8,7 @@ interface LeaderboardModalProps {
   topScores: LeaderboardEntry[];
   currentHighScore: number;
   currentHighScoreNickname: string;
+  onRefresh?: () => void;
 }
 
 export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
@@ -16,6 +17,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
   topScores = [],
   currentHighScore,
   currentHighScoreNickname,
+  onRefresh,
 }) => {
   if (!isOpen) return null;
 
@@ -23,7 +25,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
   const top1 = topScores.length > 0 ? topScores[0] : {
     nickname: currentHighScoreNickname || 'CYBER_LEGEND',
     score: currentHighScore,
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().slice(0, 16).replace('T', ' '),
   };
 
   return (
@@ -34,9 +36,22 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
             <Trophy size={22} className="text-yellow-400" />
             <h2>GLOBAL LEADERBOARD (명예의 전당)</h2>
           </div>
-          <button className="close-btn" onClick={onClose}>
-            <X size={20} />
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {onRefresh && (
+              <button
+                className="icon-btn"
+                onClick={onRefresh}
+                title="실시간 랭킹 새로고침"
+                style={{ padding: '0.25rem 0.45rem', fontSize: '0.7rem' }}
+              >
+                <RotateCcw size={14} />
+                <span>새로고침</span>
+              </button>
+            )}
+            <button className="close-btn" onClick={onClose}>
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         <div className="modal-body">
@@ -52,7 +67,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
 
           {/* Ranks List */}
           <div className="leaderboard-full-list">
-            <h4 className="list-title">🏆 Top 랭커 순위</h4>
+            <h4 className="list-title">🏆 Top 랭커 순위 (실시간 DB 연동)</h4>
             <div className="list-container">
               {topScores.length === 0 ? (
                 <div className="empty-msg">기록된 점수가 없습니다. 첫 번째 전설이 되어보세요!</div>

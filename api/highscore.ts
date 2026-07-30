@@ -7,12 +7,26 @@ interface LeaderboardEntry {
   date: string;
 }
 
+function formatDateWithTime(dateInput?: string | Date): string {
+  const d = dateInput ? new Date(dateInput) : new Date();
+  if (isNaN(d.getTime())) return String(dateInput);
+
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  const year = d.getFullYear();
+  const month = pad(d.getMonth() + 1);
+  const day = pad(d.getDate());
+  const hours = pad(d.getHours());
+  const minutes = pad(d.getMinutes());
+
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
 // In-memory fallback
 let globalRecord = {
   highScore: 10000,
   nickname: 'CYBER_LEGEND',
   topScores: [
-    { nickname: 'CYBER_LEGEND', score: 10000, date: new Date().toISOString().split('T')[0] }
+    { nickname: 'CYBER_LEGEND', score: 10000, date: formatDateWithTime() }
   ] as LeaderboardEntry[],
 };
 
@@ -51,7 +65,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           const topScores: LeaderboardEntry[] = data.map((item) => ({
             nickname: item.nickname,
             score: item.score,
-            date: item.created_at ? new Date(item.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+            date: formatDateWithTime(item.created_at),
           }));
 
           return res.status(200).json({
@@ -78,7 +92,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const cleanName = String(nickname).trim().slice(0, 12) || '익명';
     const numScore = Math.floor(score);
     const createdAt = new Date().toISOString();
-    const dateString = createdAt.split('T')[0];
+    const formattedDate = formatDateWithTime(createdAt);
 
     // Try saving to Supabase if configured
     if (supabase) {
@@ -107,7 +121,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             const topScores: LeaderboardEntry[] = data.map((item) => ({
               nickname: item.nickname,
               score: item.score,
-              date: item.created_at ? new Date(item.created_at).toISOString().split('T')[0] : dateString,
+              date: formatDateWithTime(item.created_at),
             }));
 
             return res.status(200).json({
@@ -129,7 +143,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const newEntry: LeaderboardEntry = {
       nickname: cleanName,
       score: numScore,
-      date: dateString,
+      date: formattedDate,
     };
 
     globalRecord.topScores.push(newEntry);
