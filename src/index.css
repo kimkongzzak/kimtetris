@@ -876,8 +876,8 @@ body {
   max-width: 440px;
   margin: 0 auto;
   flex-direction: column;
-  gap: 0.75rem; /* Increased vertical spacing between button rows */
-  padding: 0.4rem 0.6rem 0.6rem;
+  gap: 0.35rem; /* Slightly tighter vertical spacing between button rows */
+  padding: 0.2rem 0.5rem 0.4rem;
   flex-shrink: 0;
 }
 
@@ -888,7 +888,7 @@ body {
 
 .touch-stealth-row.row-top {
   justify-content: flex-start;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.1rem;
 }
 
 .hold-stepped-btn {
@@ -918,15 +918,15 @@ body {
   justify-content: center;
   align-items: flex-start;
   gap: 1.4rem;
-  margin: 0.25rem 0 0.35rem;
+  margin: 0.1rem 0 0.15rem;
 }
 
 .center-offset-down {
-  transform: translateY(8px); /* Smooth, subtle stepped-down offset */
+  transform: translateY(4px); /* Smooth, subtle stepped-down offset */
 }
 
 .center-offset-down:active {
-  transform: translateY(8px) scale(0.92) !important;
+  transform: translateY(4px) scale(0.92) !important;
 }
 
 .touch-stealth-row.row-bot {
@@ -934,7 +934,7 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-top: 0.5rem;
+  margin-top: 0.15rem;
 }
 
 .hold-touch-group {
@@ -1847,8 +1847,8 @@ body {
     width: 100%;
     max-width: 320px;
     height: 100%;
-    max-height: calc(100vh - 255px);
-    max-height: calc(100dvh - 255px);
+    max-height: calc(100vh - 275px);
+    max-height: calc(100dvh - 275px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1857,15 +1857,15 @@ body {
   }
 
   .canvas-container {
-    max-height: calc(100vh - 255px);
-    max-height: calc(100dvh - 255px);
+    max-height: calc(100vh - 275px);
+    max-height: calc(100dvh - 275px);
     border-radius: 8px;
     aspect-ratio: 1 / 2;
   }
 
   .excel-board-wrapper {
-    max-height: calc(100vh - 255px);
-    max-height: calc(100dvh - 255px);
+    max-height: calc(100vh - 275px);
+    max-height: calc(100dvh - 275px);
     display: flex;
     flex-direction: column;
     align-items: center;
