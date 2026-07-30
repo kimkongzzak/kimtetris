@@ -332,6 +332,19 @@ export function App() {
 
 
 
+      {/* Mobile Floating Play Button (IDLE State Only) */}
+      {gameState === 'IDLE' && (
+        <div className="mobile-floating-left-controls">
+          <button
+            className="mobile-float-btn play-btn"
+            onClick={startGame}
+            title="게임 시작"
+          >
+            <Play size={24} color="#ffffff" />
+          </button>
+        </div>
+      )}
+
       {/* Main Game Section */}
       <main className="game-layout">
         {/* Left Side Column: Hold Piece & Controls */}
