@@ -869,113 +869,169 @@ body {
   50% { transform: translateY(-4px); }
 }
 
-/* Touch Controls - 3-Tier Mobile Layout */
+/* Touch Controls - Arcade D-Pad & Big Action Buttons Layout */
 .touch-controls-container {
   display: none !important; /* Strictly hide on desktop */
   width: 100%;
-  max-width: 360px;
+  max-width: 460px;
   margin: 0 auto;
-  flex-direction: column;
+  display: flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.2rem 0.5rem;
+  justify-content: space-between;
+  gap: 0.4rem;
+  padding: 0.25rem 0.5rem;
   flex-shrink: 0;
 }
 
-.touch-row-top {
+/* Left Column: Big HOLD Button (Top-Left) */
+.touch-col-left {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  gap: 1.5rem;
-}
-
-.touch-row-top .action-btn {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   flex: 1;
-  padding: 0.45rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 800;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
 }
 
-.touch-row-mid {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.hold-big-btn {
   width: 100%;
-  margin: 0.1rem 0;
+  max-width: 105px;
+  height: 64px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.3)) !important;
+  border: 2px solid #10b981 !important;
+  color: #34d399 !important;
+  border-radius: 14px !important;
+  font-family: var(--font-orbitron), var(--font-sans);
+  font-size: 1.05rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
 }
 
-.rotate-circle-btn {
+.hold-big-btn:active {
+  background: #10b981 !important;
+  color: #ffffff !important;
+  transform: scale(0.94);
+}
+
+/* Center Column: Cross D-Pad Controller */
+.touch-col-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  flex: 0 0 auto;
+}
+
+.dpad-row-top, .dpad-row-bot {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.dpad-row-mid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.2rem;
+}
+
+.dpad-square-btn {
   width: 52px !important;
   height: 52px !important;
-  border-radius: 50% !important;
+  border-radius: 12px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   padding: 0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
-/* Vibrant Blue Rotate Button (회전 🔁) */
-.vibrant-rotate {
-  background: linear-gradient(135deg, #0284c7, #0369a1) !important;
-  color: #ffffff !important;
-  border: 2px solid #38bdf8 !important;
-  box-shadow: 0 0 14px rgba(56, 189, 248, 0.6) !important;
+.rotate-blue-btn, .softdrop-blue-btn {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+  border: 2px solid #60a5fa !important;
+  box-shadow: 0 0 14px rgba(59, 130, 246, 0.6) !important;
 }
 
-.vibrant-rotate:active {
-  background: #0369a1 !important;
-  transform: scale(0.94);
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.9) !important;
+.rotate-blue-btn:active, .softdrop-blue-btn:active {
+  background: #1d4ed8 !important;
+  transform: scale(0.92);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.9) !important;
 }
 
-[data-theme='excel'] .vibrant-rotate {
-  background: linear-gradient(135deg, #0284c7, #0d9488) !important;
-  color: #ffffff !important;
-  border-color: #38bdf8 !important;
-}
-
-/* Vibrant Amber Hard Drop Button (DROP ⚡) */
-.vibrant-hard-drop {
-  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
-  color: #ffffff !important;
-  border: 2px solid #fbbf24 !important;
-  box-shadow: 0 0 14px rgba(245, 158, 11, 0.6) !important;
-}
-
-.vibrant-hard-drop:active {
-  background: #d97706 !important;
-  transform: scale(0.96);
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.9) !important;
-}
-
-[data-theme='excel'] .vibrant-hard-drop {
-  background: linear-gradient(135deg, #d97706, #b45309) !important;
-  color: #ffffff !important;
-  border-color: #f59e0b !important;
-}
-
-.touch-row-bot {
+.dpad-arrow-btn {
+  width: 54px !important;
+  height: 54px !important;
+  background: rgba(var(--bg-card-rgb), 0.95);
+  border: 2.5px solid var(--text-main);
+  color: var(--text-main);
+  border-radius: 12px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 0.6rem;
-  width: 100%;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
-.dpad-btn {
+.dpad-arrow-btn:active {
+  background: var(--primary-cyan);
+  color: #000000;
+  border-color: var(--primary-cyan);
+  transform: scale(0.92);
+}
+
+/* Right Column: Big DROP Button (Bottom-Right) */
+.touch-col-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
   flex: 1;
-  max-width: 100px;
-  padding: 0.5rem 0;
-  border-radius: 10px;
+}
+
+.drop-big-btn {
+  width: 100%;
+  max-width: 105px;
+  height: 64px;
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  border: 2px solid #fbbf24 !important;
+  color: #ffffff !important;
+  border-radius: 14px !important;
+  font-family: var(--font-orbitron), var(--font-sans);
+  font-size: 1.05rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 1px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 0.15rem;
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.6);
+}
+
+.drop-big-btn:active {
+  background: #d97706 !important;
+  transform: scale(0.94);
+}
+
+[data-theme='excel'] .hold-big-btn {
+  background: #ffffff !important;
+  border-color: #107c41 !important;
+  color: #107c41 !important;
+}
+
+[data-theme='excel'] .dpad-arrow-btn {
+  background: #ffffff !important;
+  border-color: #0f172a !important;
+  color: #0f172a !important;
+}
+
+[data-theme='excel'] .drop-big-btn {
+  background: linear-gradient(135deg, #d97706, #b45309) !important;
 }
 
 .touch-btn {
