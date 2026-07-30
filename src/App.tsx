@@ -45,7 +45,6 @@ export function App() {
     moveLeft,
     moveRight,
     rotate,
-    tSpin,
     softDrop,
     hardDrop,
     hold,
@@ -426,7 +425,6 @@ export function App() {
         onMoveLeft={moveLeft}
         onMoveRight={moveRight}
         onRotate={rotate}
-        onTSpin={tSpin}
         onSoftDrop={softDrop}
         onHardDrop={hardDrop}
         onHold={hold}

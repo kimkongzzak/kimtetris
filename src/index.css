@@ -342,11 +342,11 @@ body {
 }
 
 [data-theme='excel'] .touch-btn {
-  background: #ffffff !important;
-  border-color: #cbd5e1 !important;
-  color: #1f1f1f !important;
-  border-radius: 6px !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #1f1f1f;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 [data-theme='excel'] .stat-value {
@@ -788,23 +788,61 @@ body {
   width: 100%;
 }
 
-.rotate-top-btn {
+/* Vibrant Blue Rotate Button (회전 🔁) - Overrides All Themes */
+.vibrant-rotate {
+  background: linear-gradient(135deg, #0284c7, #0369a1) !important;
+  color: #ffffff !important;
+  border: 2px solid #38bdf8 !important;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6) !important;
+  font-weight: 800 !important;
   width: 75%;
   padding: 0.4rem 0.2rem;
   font-size: 0.75rem;
-  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.3rem;
-  background: rgba(var(--bg-card-rgb), 0.9);
-  border-color: var(--primary-cyan);
+  border-radius: 8px;
 }
 
-[data-theme='excel'] .rotate-top-btn {
-  background: #ffffff !important;
-  color: #107c41 !important;
-  border-color: #107c41 !important;
+.vibrant-rotate:active {
+  background: #0369a1 !important;
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.9) !important;
+}
+
+[data-theme='excel'] .vibrant-rotate {
+  background: linear-gradient(135deg, #0284c7, #0d9488) !important;
+  color: #ffffff !important;
+  border-color: #38bdf8 !important;
+}
+
+/* Vibrant Amber Hard Drop Button (하드드롭 ⚡) - Overrides All Themes */
+.vibrant-hard-drop {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  color: #ffffff !important;
+  border: 2px solid #fbbf24 !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.6) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.5px;
+  width: 100%;
+  padding: 0.45rem 0.2rem;
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  border-radius: 8px;
+}
+
+.vibrant-hard-drop:active {
+  background: #d97706 !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.9) !important;
+}
+
+[data-theme='excel'] .vibrant-hard-drop {
+  background: linear-gradient(135deg, #d97706, #b45309) !important;
+  color: #ffffff !important;
+  border-color: #f59e0b !important;
 }
 
 .touch-row-bottom {
@@ -825,7 +863,7 @@ body {
   justify-content: center;
   cursor: pointer;
   backdrop-filter: blur(8px);
-  transition: background-color 0.1s ease;
+  transition: background-color 0.15s ease;
 }
 
 .touch-btn:active {
@@ -843,11 +881,6 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.3rem;
-}
-
-.hard-drop-btn {
-  background: rgba(234, 179, 8, 0.2);
-  border-color: var(--accent-yellow);
 }
 
 .dpad-btn {

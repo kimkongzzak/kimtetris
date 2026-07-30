@@ -6,14 +6,12 @@ import {
   RotateCw,
   Zap,
   Shield,
-  RefreshCw,
 } from 'lucide-react';
 
 interface TouchControlsProps {
   onMoveLeft: () => void;
   onMoveRight: () => void;
   onRotate: () => void;
-  onTSpin: () => void;
   onSoftDrop: () => void;
   onHardDrop: () => void;
   onHold: () => void;
@@ -24,7 +22,6 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
   onMoveLeft,
   onMoveRight,
   onRotate,
-  onTSpin,
   onSoftDrop,
   onHardDrop,
   onHold,
@@ -48,24 +45,15 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
 
   return (
     <div className="touch-controls-container">
-      {/* Left Cluster: Top HOLD, Middle T-SPIN, Bottom HARD DROP */}
+      {/* Left Cluster: Top HOLD, Bottom HARD DROP */}
       <div className="touch-group-left">
         <button
           className="touch-btn action-btn hold-btn"
           onPointerDown={(e) => handlePointerDown(e, onHold)}
           disabled={disabled}
         >
-          <Shield size={13} />
+          <Shield size={14} />
           <span>HOLD</span>
-        </button>
-
-        <button
-          className="touch-btn action-btn tspin-btn"
-          onPointerDown={(e) => handlePointerDown(e, onTSpin)}
-          disabled={disabled}
-        >
-          <RefreshCw size={13} className="text-purple-400" />
-          <span>T-SPIN</span>
         </button>
 
         <button
@@ -73,21 +61,21 @@ export const TouchControls: React.FC<TouchControlsProps> = ({
           onPointerDown={(e) => handlePointerDown(e, onHardDrop)}
           disabled={disabled}
         >
-          <Zap size={14} color="#ffffff" />
+          <Zap size={15} color="#ffffff" />
           <span>HARD DROP</span>
         </button>
       </div>
 
       {/* Right Cluster: Keypad format */}
       <div className="touch-group-right">
-        {/* Top Row: Rotate Button 🔁 */}
+        {/* Top Row: Vibrant Rotate Button 🔁 */}
         <div className="touch-row-top">
           <button
-            className="touch-btn rotate-top-btn"
+            className="touch-btn rotate-top-btn vibrant-rotate"
             onPointerDown={(e) => handlePointerDown(e, onRotate)}
             disabled={disabled}
           >
-            <RotateCw size={15} />
+            <RotateCw size={16} color="#ffffff" />
             <span>회전 🔁</span>
           </button>
         </div>
