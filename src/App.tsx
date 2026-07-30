@@ -47,13 +47,8 @@ export function App() {
 
   const [isControlsModalOpen, setIsControlsModalOpen] = useState(false);
   const [cardOpacity, setCardOpacity] = useState(85);
-  const [theme, setTheme] = useState<'dark' | 'light' | 'excel'>('excel'); // Default to Excel theme!
+  const [theme, setTheme] = useState<'dark' | 'light' | 'excel'>('excel');
   const [isStealthMode, setIsStealthMode] = useState(false);
-
-  // Update CSS custom variable for opacity in real-time
-  useEffect(() => {
-    document.documentElement.style.setProperty('--card-opacity', (cardOpacity / 100).toString());
-  }, [cardOpacity]);
 
   // Update Theme attribute
   useEffect(() => {
@@ -222,8 +217,8 @@ export function App() {
         </div>
 
         <div className="header-actions">
-          {/* Top Fixed Transparency / Opacity Slider (Min 0%) */}
-          <div className="opacity-control-group" title="UI 투명도 조절 (0% ~ 100%)">
+          {/* Top Fixed Transparency / Opacity Slider (Min 0%) - Controls Block Opacity ONLY */}
+          <div className="opacity-control-group" title="블록 투명도 조절 (0% ~ 100%)">
             <label htmlFor="opacity-range">
               <Sliders size={14} />
               <span>투명도</span>
@@ -348,7 +343,7 @@ export function App() {
                   board={board}
                   currentPiece={currentPiece}
                   ghostPiece={ghostPiece}
-                  opacity={cardOpacity / 100}
+                  blockOpacity={cardOpacity / 100}
                   theme={theme}
                 />
               </div>
@@ -358,7 +353,7 @@ export function App() {
               board={board}
               currentPiece={currentPiece}
               ghostPiece={ghostPiece}
-              opacity={cardOpacity / 100}
+              blockOpacity={cardOpacity / 100}
               theme={theme}
             />
           )}

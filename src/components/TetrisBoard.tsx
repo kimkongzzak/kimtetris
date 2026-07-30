@@ -6,7 +6,7 @@ interface TetrisBoardProps {
   board: BoardGrid;
   currentPiece: Piece | null;
   ghostPiece: Piece | null;
-  opacity?: number; // 0.0 ~ 1.0
+  blockOpacity?: number; // 0.0 ~ 1.0 (Controls block colors transparency ONLY)
   theme?: 'dark' | 'light' | 'excel';
 }
 
@@ -24,8 +24,8 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
   board,
   currentPiece,
   ghostPiece,
-  opacity = 0.85,
-  theme = 'dark',
+  blockOpacity = 0.85,
+  theme = 'excel',
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -46,16 +46,14 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
     // Clear canvas
     ctx.clearRect(0, 0, width, height);
 
-    // Set canvas global alpha based on opacity slider
-    ctx.globalAlpha = Math.max(0.01, opacity);
+    // 1. Draw Grid Background & Grid Lines (Always 100% solid & visible)
+    ctx.globalAlpha = 1.0;
 
-    // Fill canvas background
     if (isExcel) {
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, width, height);
     }
 
-    // Draw background grid lines
     ctx.strokeStyle = isExcel ? '#d4d4d4' : 'rgba(255, 255, 255, 0.08)';
     ctx.lineWidth = 1;
 
@@ -90,10 +88,11 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
 
       ctx.save();
 
+      // Apply block opacity slider only to the block elements!
+      ctx.globalAlpha = Math.max(0.0, blockOpacity);
+
       if (isExcel) {
-        // Excel spreadsheet cell rendering
         if (isGhost) {
-          // Excel selected cell range green border outline
           ctx.strokeStyle = '#107c41';
           ctx.lineWidth = 2;
           ctx.strokeRect(px + 1, py + 1, cellWidth - 2, cellHeight - 2);
@@ -109,7 +108,6 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
           ctx.strokeRect(px, py, cellWidth, cellHeight);
         }
       } else {
-        // Cyberpunk / Light theme rendering
         if (isGhost) {
           ctx.strokeStyle = color;
           ctx.lineWidth = 2;
@@ -138,7 +136,7 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
       ctx.restore();
     };
 
-    // 1. Draw locked grid blocks
+    // 2. Draw locked grid blocks with blockOpacity
     for (let y = 0; y < BOARD_HEIGHT; y++) {
       for (let x = 0; x < BOARD_WIDTH; x++) {
         const cell = board[y][x];
@@ -148,7 +146,7 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
       }
     }
 
-    // 2. Draw Ghost Piece (land projection)
+    // 3. Draw Ghost Piece with blockOpacity
     if (ghostPiece && currentPiece) {
       for (let y = 0; y < ghostPiece.shape.length; y++) {
         for (let x = 0; x < ghostPiece.shape[y].length; x++) {
@@ -163,7 +161,7 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
       }
     }
 
-    // 3. Draw Current Active Piece
+    // 4. Draw Current Active Piece with blockOpacity
     if (currentPiece) {
       for (let y = 0; y < currentPiece.shape.length; y++) {
         for (let x = 0; x < currentPiece.shape[y].length; x++) {
@@ -177,7 +175,7 @@ export const TetrisBoard: React.FC<TetrisBoardProps> = ({
         }
       }
     }
-  }, [board, currentPiece, ghostPiece, opacity, theme]);
+  }, [board, currentPiece, ghostPiece, blockOpacity, theme]);
 
   return (
     <div className={`canvas-container ${theme === 'excel' ? 'excel-canvas-mode' : 'shadow-neon'}`}>

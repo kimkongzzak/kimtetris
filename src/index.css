@@ -83,7 +83,7 @@ body {
   overflow: hidden;
 }
 
-/* Header Bar - Responsive & Compact */
+/* Header Bar - Responsive & Compact (Always Solid UI) */
 .header-bar {
   position: relative;
   width: 100%;
@@ -91,14 +91,13 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0.4rem 0.75rem;
-  background: rgba(var(--bg-card-rgb), var(--card-opacity));
+  background: rgba(var(--bg-card-rgb), 0.9);
   border: 1px solid var(--border-neon);
   border-radius: 12px;
   backdrop-filter: blur(12px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   gap: 0.4rem;
-  opacity: var(--card-opacity);
-  transition: background-color 0.15s ease, opacity 0.15s ease;
+  transition: background-color 0.15s ease;
   flex-shrink: 0;
 }
 
@@ -370,7 +369,7 @@ body {
 }
 
 .icon-btn {
-  background: rgba(var(--bg-card-rgb), var(--card-opacity));
+  background: rgba(var(--bg-card-rgb), 0.85);
   border: 1px solid var(--border-neon);
   color: var(--text-main);
   border-radius: 8px;
@@ -397,7 +396,7 @@ body {
   box-shadow: 0 0 10px var(--primary-glow);
 }
 
-/* Integrated Game Layout - Always 3 Columns Side-by-Side */
+/* Integrated Game Layout */
 .game-layout {
   display: flex;
   flex-direction: row;
@@ -408,11 +407,6 @@ body {
   flex: 1;
   min-height: 0;
   padding: 0.25rem 0;
-}
-
-.side-column, .center-board, .touch-controls-container {
-  opacity: var(--card-opacity);
-  transition: opacity 0.15s ease;
 }
 
 .side-column {
@@ -426,7 +420,7 @@ body {
 
 /* Glassmorphism Panels */
 .glass-panel {
-  background: rgba(var(--bg-card-rgb), var(--card-opacity));
+  background: rgba(var(--bg-card-rgb), 0.85);
   border: 1px solid var(--border-neon);
   border-radius: 12px;
   padding: 0.75rem;
@@ -458,7 +452,7 @@ body {
   border-radius: 12px;
   border: 2px solid var(--primary-cyan);
   box-shadow: 0 0 20px var(--primary-glow);
-  background: rgba(var(--bg-card-rgb), var(--card-opacity));
+  background: rgba(var(--bg-card-rgb), 0.85);
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -596,7 +590,7 @@ body {
 }
 
 .touch-btn {
-  background: rgba(var(--bg-card-rgb), var(--card-opacity));
+  background: rgba(var(--bg-card-rgb), 0.85);
   border: 1px solid var(--border-neon);
   color: var(--text-main);
   border-radius: 10px;
@@ -825,7 +819,7 @@ body {
   color: var(--accent-yellow);
 }
 
-/* Mobile Breakpoints - Perfectly Proportioned 3-Column Layout */
+/* Mobile Breakpoints */
 @media (max-width: 768px) {
   .app-container {
     padding: 0.3rem;
