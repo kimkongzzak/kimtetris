@@ -40,7 +40,7 @@ export function formatDateWithTime(dateInput?: string | Date): string {
 /**
  * Fetch Top High Scores from Supabase DB (Table: tetris_scores)
  */
-export async function getTopScoresFromDb(limit: number = 10): Promise<ScoreRecord[]> {
+export async function getTopScoresFromDb(limit: number = 50): Promise<ScoreRecord[]> {
   if (!supabase) {
     return [];
   }

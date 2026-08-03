@@ -61,11 +61,12 @@ export const useTetris = () => {
   // Lock Delay refs
   const lockDelayTimerRef = useRef<number | null>(null);
   const lockResetCountRef = useRef<number>(0);
+  const isSubmittingRef = useRef<boolean>(false);
 
   // Fetch Server High Score & Leaderboard from Supabase DB or API
   const refreshLeaderboard = useCallback(async () => {
     if (isSupabaseConfigured) {
-      const dbScores = await getTopScoresFromDb(10);
+      const dbScores = await getTopScoresFromDb(50);
       if (dbScores.length > 0) {
         const topScores = dbScores.map((item) => ({
           nickname: item.nickname,
@@ -138,53 +139,64 @@ export const useTetris = () => {
 
   // Submit new high score & nickname to Server / Supabase DB
   const submitHighScore = useCallback(async (nickname: string, scoreToSubmit: number) => {
-    const cleanNick = nickname.trim().slice(0, 12) || '익명';
-    localStorage.setItem(HIGH_SCORE_KEY, scoreToSubmit.toString());
-    localStorage.setItem(HIGH_SCORE_NICK_KEY, cleanNick);
-
-    setStats((prev) => ({
-      ...prev,
-      highScore: Math.max(prev.highScore, scoreToSubmit),
-      highScoreNickname: cleanNick,
-    }));
-
-    if (isSupabaseConfigured) {
-      await saveScoreToDb(cleanNick, scoreToSubmit);
-      const updatedScores = await getTopScoresFromDb(10);
-      if (updatedScores.length > 0) {
-        const topScores = updatedScores.map((item) => ({
-          nickname: item.nickname,
-          score: item.score,
-          date: formatDateWithTime(item.created_at),
-        }));
-        setStats((prev) => ({
-          ...prev,
-          highScore: topScores[0].score,
-          highScoreNickname: topScores[0].nickname,
-          topScores,
-        }));
-      }
-    }
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
 
     try {
-      const res = await fetch('/api/highscore', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nickname: cleanNick, score: scoreToSubmit }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.globalRecord) {
-          setStats((prev) => ({
-            ...prev,
-            highScore: data.globalRecord.highScore,
-            highScoreNickname: data.globalRecord.nickname,
-            topScores: data.globalRecord.topScores,
-          }));
+      const cleanNick = nickname.trim().slice(0, 12) || '익명';
+      localStorage.setItem(HIGH_SCORE_KEY, scoreToSubmit.toString());
+      localStorage.setItem(HIGH_SCORE_NICK_KEY, cleanNick);
+
+      setStats((prev) => ({
+        ...prev,
+        highScore: Math.max(prev.highScore, scoreToSubmit),
+        highScoreNickname: cleanNick,
+      }));
+
+      if (isSupabaseConfigured) {
+        const success = await saveScoreToDb(cleanNick, scoreToSubmit);
+        if (success) {
+          const updatedScores = await getTopScoresFromDb(50);
+          if (updatedScores.length > 0) {
+            const topScores = updatedScores.map((item) => ({
+              nickname: item.nickname,
+              score: item.score,
+              date: formatDateWithTime(item.created_at),
+            }));
+            setStats((prev) => ({
+              ...prev,
+              highScore: topScores[0].score,
+              highScoreNickname: topScores[0].nickname,
+              topScores,
+            }));
+          }
+          return; // Done! Do not call /api/highscore to prevent double insert into Supabase
         }
       }
-    } catch {
-      // Offline fallback
+
+      // API Fallback (used when Supabase is not directly configured on client, or if client save failed)
+      try {
+        const res = await fetch('/api/highscore', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nickname: cleanNick, score: scoreToSubmit }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.globalRecord) {
+            setStats((prev) => ({
+              ...prev,
+              highScore: data.globalRecord.highScore,
+              highScoreNickname: data.globalRecord.nickname,
+              topScores: data.globalRecord.topScores,
+            }));
+          }
+        }
+      } catch {
+        // Offline fallback
+      }
+    } finally {
+      isSubmittingRef.current = false;
     }
   }, []);
 

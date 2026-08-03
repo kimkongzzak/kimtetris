@@ -59,7 +59,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           .from('tetris_scores')
           .select('nickname, score, created_at')
           .order('score', { ascending: false })
-          .limit(10);
+          .limit(50);
 
         if (!error && data && data.length > 0) {
           const topScores: LeaderboardEntry[] = data.map((item) => ({
@@ -115,7 +115,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             .from('tetris_scores')
             .select('nickname, score, created_at')
             .order('score', { ascending: false })
-            .limit(10);
+            .limit(50);
 
           if (data && data.length > 0) {
             const topScores: LeaderboardEntry[] = data.map((item) => ({
@@ -148,7 +148,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     globalRecord.topScores.push(newEntry);
     globalRecord.topScores.sort((a, b) => b.score - a.score);
-    globalRecord.topScores = globalRecord.topScores.slice(0, 10);
+    globalRecord.topScores = globalRecord.topScores.slice(0, 50);
 
     if (numScore > globalRecord.highScore) {
       globalRecord.highScore = numScore;

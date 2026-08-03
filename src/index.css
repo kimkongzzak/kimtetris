@@ -815,10 +815,109 @@ body {
   text-shadow: none !important;
 }
 
+.list-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
 .list-title {
   font-size: 0.8rem;
   color: var(--text-muted);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
+}
+
+.rank-count-badge {
+  font-family: var(--font-orbitron);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--primary-cyan);
+  background: rgba(var(--bg-card-rgb), 0.6);
+  border: 1px solid var(--border-neon);
+  padding: 0.15rem 0.45rem;
+  border-radius: 12px;
+}
+
+[data-theme='excel'] .rank-count-badge {
+  color: #107c41 !important;
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+.leaderboard-modal .list-container {
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 0.3rem;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='excel'] .leaderboard-modal .list-container {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+.leaderboard-modal .list-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.leaderboard-modal .list-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.leaderboard-modal .list-container::-webkit-scrollbar-thumb {
+  background: var(--border-neon);
+  border-radius: 3px;
+}
+
+[data-theme='excel'] .leaderboard-modal .list-container::-webkit-scrollbar-thumb {
+  background: #107c41 !important;
+}
+
+.load-more-btn {
+  width: 100%;
+  margin-top: 0.6rem;
+  padding: 0.5rem;
+  background: linear-gradient(135deg, rgba(0, 240, 240, 0.15), rgba(168, 85, 247, 0.15));
+  border: 1px solid var(--border-neon);
+  color: var(--primary-cyan);
+  border-radius: 8px;
+  font-family: var(--font-orbitron), var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.load-more-btn:hover {
+  background: linear-gradient(135deg, rgba(0, 240, 240, 0.3), rgba(168, 85, 247, 0.3));
+  border-color: var(--primary-cyan);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.load-more-btn:active {
+  transform: translateY(0);
+}
+
+[data-theme='excel'] .load-more-btn {
+  background: #e6f4ea !important;
+  border-color: #107c41 !important;
+  color: #107c41 !important;
+  font-family: var(--font-sans) !important;
+}
+
+[data-theme='excel'] .load-more-btn:hover {
+  background: #c8e6c9 !important;
+  color: #0b5c30 !important;
 }
 
 .rank-row {

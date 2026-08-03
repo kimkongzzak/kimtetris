@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LeaderboardEntry } from '../types/tetris';
-import { Crown, Trophy, X, Medal, RotateCcw } from 'lucide-react';
+import { Crown, Trophy, X, Medal, RotateCcw, ChevronDown } from 'lucide-react';
 
 interface LeaderboardModalProps {
   isOpen: boolean;
@@ -19,6 +19,14 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
   currentHighScoreNickname,
   onRefresh,
 }) => {
+  const [visibleCount, setVisibleCount] = useState<number>(5);
+
+  useEffect(() => {
+    if (isOpen) {
+      setVisibleCount(5);
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   // Determine #1 Champion (either from topScores[0] or fallback to current global record)
@@ -27,6 +35,9 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
     score: currentHighScore,
     date: new Date().toISOString().slice(0, 16).replace('T', ' '),
   };
+
+  const displayedScores = topScores.slice(0, visibleCount);
+  const hasMore = topScores.length > visibleCount;
 
   return (
     <div className="modal-backdrop">
@@ -67,12 +78,20 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
 
           {/* Ranks List */}
           <div className="leaderboard-full-list">
-            <h4 className="list-title">🏆 Top 랭커 순위 (실시간 DB 연동)</h4>
+            <div className="list-title-row">
+              <h4 className="list-title">🏆 Top 랭커 순위 (실시간 DB 연동)</h4>
+              {topScores.length > 0 && (
+                <span className="rank-count-badge">
+                  {displayedScores.length} / {topScores.length}개 표시
+                </span>
+              )}
+            </div>
+
             <div className="list-container">
               {topScores.length === 0 ? (
                 <div className="empty-msg">기록된 점수가 없습니다. 첫 번째 전설이 되어보세요!</div>
               ) : (
-                topScores.map((entry, idx) => (
+                displayedScores.map((entry, idx) => (
                   <div
                     key={idx}
                     className={`rank-row ${idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : ''}`}
@@ -90,6 +109,17 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                 ))
               )}
             </div>
+
+            {/* Load More Button for 5+ rows */}
+            {hasMore && (
+              <button
+                className="load-more-btn"
+                onClick={() => setVisibleCount((prev) => prev + 5)}
+              >
+                <ChevronDown size={16} />
+                <span>5개 더보기 ({displayedScores.length}/{topScores.length})</span>
+              </button>
+            )}
           </div>
         </div>
 
